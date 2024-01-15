@@ -9,3 +9,5 @@ const newUpdateFeatures = function(){
         console.log(features);
     }
 }
+
+module.exports = { getLibraryInfo: getLibraryInfo, newUpdateFeatures: newUpdateFeatures};
