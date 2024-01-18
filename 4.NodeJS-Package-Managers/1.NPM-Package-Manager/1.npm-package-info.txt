@@ -24,3 +24,11 @@ e. Creating npm setup can be done in 2 ways-
     b. Automatic:
         $ npm init    # ask for package to install while process
         $ npm init -y # given '-y' flag to auto the process of asking
+
+f. Package installation as dev dependencies-
+    1. Install nodemon as dev dependencies-
+        $ npm install nodemon --save-dev
+        or, 
+        $ npm install nodemon -D
+    To run the server and monitoring state-
+        
