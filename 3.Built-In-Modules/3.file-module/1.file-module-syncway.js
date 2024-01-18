@@ -14,7 +14,8 @@
         a. readFileSync(path, 'encoding')                  --> to read the file
         b. writeFileSync(path, 'encoding', {flag: 'opt'})  --> to write to the file
 
-
+    Note: Both of the method returns 'undefined' as its return value
+    
 */
 const {readFileSync, writeFileSync} = require('fs');
 const path = require('path');
