@@ -31,4 +31,4 @@ f. Package installation as dev dependencies-
         or, 
         $ npm install nodemon -D
     To run the server and monitoring state-
-        
+        s
