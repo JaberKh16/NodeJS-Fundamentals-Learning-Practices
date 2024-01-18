@@ -1,0 +1,8 @@
+Node Package Excute(NPX) Concepts
+=================================
+NPX is basically a scripts to install packages.It was 
+introduce in npm 5.2. NPX is the way to install npm
+packages without installing them globally.
+
+Syntax:
+    $ npx <package_name> <project_name>
