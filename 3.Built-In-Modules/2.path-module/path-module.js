@@ -14,7 +14,11 @@
         - returns the path by joining multiple path segments. It populates 
         all path module-related properties and methods, providing a clean 
         and cross-platform way to construct file paths.
-    b. path.
+    b. path.extname(pathfragments)
+        - returns the file extension name. If specified path fragments has the
+        extension then gives the extension, otherwise nothing returns.
+        
+
 */
 
 const path = require('path');
@@ -25,5 +29,9 @@ const pathSeparator = path.sep;
 console.log(pathSeparator);
 
 // working with path module some functions
-const pathJoining = path.join('files', 'text-1');
+// join()
+const pathJoining = path.join('files', 'text-1.txt');
 console.log(pathJoining);
+// extname()
+const fileExtension = path.extname(pathJoining);
+console.log(fileExtension);
