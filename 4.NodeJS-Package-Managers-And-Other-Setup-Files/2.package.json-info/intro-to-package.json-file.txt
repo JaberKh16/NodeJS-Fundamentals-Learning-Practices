@@ -1,0 +1,34 @@
+NodeJS package.json File Concept
+================================
+In NodeJS, a single files named- package.json is used
+to controll the packages and dependencies for the node
+project. 
+
+package.json file will be look like something like this-
+    {
+        "name": "1.lodash-package",
+        "version": "1.0.0",
+        "description": "",
+        "main": "1.lodash-practice-1.js",
+        "scripts": {
+            "start" : "node 1.lodash-practice-1.js", 
+            "dev": "nodemon 1.lodash-practice-1.js"
+        },
+        "keywords": [],
+        "author": "",
+        "license": "ISC",
+        "dependencies": {
+            "lodash": "^4.17.21"
+        }
+    }
+
+This setup is little bit modified. To get a fresh package.json
+setup run the following command-
+    
+        $ npm init -y
+
+Then make necessary changes according to your project need.
+
+To learn more about this file - package.json follow the link given:
+    
+Link: https://nodesource.com/blog/the-basics-of-package-json-in-node-js-and-npm/
