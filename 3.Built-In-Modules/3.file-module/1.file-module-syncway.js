@@ -12,23 +12,21 @@
     This provides two functions to work with files which are
     the following:
         a. readFileSync(path, 'encoding')                  --> to read the file
-        b. writeFileSync(path, 'encoding', {flag: 'opt'})  --> to write to the file
+        b. writeFileSync(path, 'content', {flag: 'opt'})  --> to write to the file
 
-    Note: Both of the method returns 'undefined' as its return value
+    Note: writeFileSync() returns 'undefined' as its return value
     
 */
 const {readFileSync, writeFileSync} = require('fs');
 const path = require('path');
 
 const filePath = path.join(__dirname, 'files', 'text-1.txt');
-console.log(filePath);
 const fileContent = readFileSync(filePath, 'utf-8');
 console.log(fileContent);
 
 const newFilePath = path.join(__dirname, 'files', 'text-2.txt')
-const writeContent = writeFileSync(newFilePath, 'utf-8');
+const writeContent = writeFileSync(newFilePath, fileContent);
 console.log(writeContent);
-const appendContent = writeFileSync(newFilePath, 'utf-8', {
-    flag: 'a'
-});
+const appendContent = writeFileSync(newFilePath, 'Something more to append to files',
+                    { flag: 'a'});
 console.log(appendContent);

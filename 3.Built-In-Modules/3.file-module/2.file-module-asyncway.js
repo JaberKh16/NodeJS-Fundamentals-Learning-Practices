@@ -12,7 +12,7 @@
     This provides two functions to work with files which are
     the following:
         a. readFileSync(path, 'encoding')                  --> to read the file
-        b. writeFileSync(path, 'encoding', {flag: 'opt'})  --> to write to the file
+        b. writeFileSync(path, 'content', {flag: 'opt'})  --> to write to the file
 
-    Note: Both of the method returns 'undefined' as its return value
+    Note: writeFileSync() method returns 'undefined' as its return value
 */
