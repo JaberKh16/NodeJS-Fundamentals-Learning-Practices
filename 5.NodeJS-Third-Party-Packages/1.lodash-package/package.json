@@ -1,0 +1,16 @@
+{
+  "name": "1.lodash-package",
+  "version": "1.0.0",
+  "description": "",
+  "main": "1.lodash-practice-1.js",
+  "scripts": {
+    "start" : "node 1.lodash-practice-1.js", 
+    "dev": "nodemon 1.lodash-practice-1.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}
