@@ -14,5 +14,16 @@
         a. readFileSync(path, 'encoding')                  --> to read the file
         b. writeFileSync(path, 'content', {flag: 'opt'})  --> to write to the file
 
-    Note: writeFileSync() method returns 'undefined' as its return value
+    Note: writeFileSync() returns 'undefined' as its return value
+
+
+    Asynchronous Block Way
+    ----------------------
+    This provides two functions to work with files which are
+    the following:
+        a. readFile(path, 'encoding', callback)                  --> to read the file
+        b. writeFile(path, 'content', callback, {flag: 'opt'})   --> to write to the file
+
+    Note: writeFileSync() returns 'undefined' as its return value
+    
 */

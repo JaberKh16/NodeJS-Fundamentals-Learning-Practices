@@ -1,0 +1,26 @@
+Node Package Manager(NPM) Concepts
+==================================
+a. To check for the version
+    $ npm --version
+b. To check for npm global
+    $ npm -global
+c. To install a package locally
+    $ npm install <package_name>
+    or,
+    $ npm i <package_name>
+d. To install a package locally
+    $ npm install -g <package_name>
+    or,
+    $ npm i -g <package_name>
+
+e. Creating npm setup can be done in 2 ways-
+    a. Manually: 
+        Create a package.json file and include package name into
+        the following-
+            {
+                "dependencies": {"package_name"}
+            } 
+
+    b. Automatic:
+        $ npm init    # ask for package to install while process
+        $ npm init -y # given '-y' flag to auto the process of asking
