@@ -1,0 +1,3 @@
+Network Issues:
+
+If you are on a corporate network, there might be restrictions on outgoing connections. Try accessing the server from a different network or using a tool like ngrok to expose your local server to the internet temporarily.
