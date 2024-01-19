@@ -1,3 +1,7 @@
+/*
+    Example-1: Promise Based 'fs' Module
+*/
+
 const {readFile, writeFile} = require('fs').promises;
 const path = require('path');
 

@@ -1,18 +1,14 @@
-const { readFile } = require('fs');
+const { readFile } = require('fs').promises;
 const path = require('path');
 
 const readContent = async() => {
     
-    const filePath = path.join(__dirname, 'files', 'text-1.txt');
+    const filePath = path.resolve(__dirname, '../files', 'text-1.txt');
     
     try {
         if (path.extname(filePath) === '.txt') {
-            const content = await readFile(filePath, 'utf8',(resolve, reject) => {
-                resolve(content);
-            });
-            return content;
-        } else {
-            return new Error('File is not a text file');
+            const content = await readFile(filePath, 'utf8');
+            return content; // returing a promise
         }
     } catch (err) {
         return err;
@@ -21,5 +17,11 @@ const readContent = async() => {
 };
 
 // Example usage:
-const readingContent =  readContent();
-console.log(readingContent);
+(async () => {
+    try {
+        const readingContent = await readContent();
+        console.log(readingContent);
+    } catch (error) {
+        console.error(error);
+    }
+})();
