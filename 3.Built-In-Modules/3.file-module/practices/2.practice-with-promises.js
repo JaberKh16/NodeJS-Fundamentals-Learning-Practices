@@ -4,7 +4,7 @@ const path = require('path');
 // async function
 const fileReadWrite = async (path) =>{
     try {
-        const filePath = path.join(__dirname, 'files', 'text-1.txt');
+        const filePath = path.join(__dirname, '../files', 'text-1.txt');
         const readingContent = await readFile(filePath, 'utf8');
         const textContent = "Something is fissy";
         const writindContent = await writeFile(
