@@ -17,8 +17,18 @@
     b. path.extname(pathfragments)
         - returns the file extension name. If specified path fragments has the
         extension then gives the extension, otherwise nothing returns.
-        
-
+    c. path.basename(pathfragments) 
+        -returns the last portion of the specified path.
+    d. path.parse(path)
+        - returns the object which represents the significant info for the 
+        specified path.
+    e. path.format(path)
+        - returns the path formatted.
+    f. path.isAbsolute(path)
+        - checks if the specified path is abosute and resulted boolean.
+    g. path.resolve(path)
+        - returns the resolve of the specified path and returns the 
+        absolute path
 */
 
 const path = require('path');
