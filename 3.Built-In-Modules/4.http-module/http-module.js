@@ -1,7 +1,7 @@
 const http = require('http');
 
 const server = http.createServer((request, response) => {
-    console.log(request.url);
+    console.log(request);
 
     if (request.url === '/') {
         response.write('Welcome to the server');
@@ -23,6 +23,6 @@ const server = http.createServer((request, response) => {
 });
 
 // Port to listen on
-server.listen(5000, () => {
-    console.log('Server is running on http://localhost:5000/');
+server.listen(3000, '127.0.0.1', () => {
+    console.log('Server is running on http://localhost:3000/');
 });

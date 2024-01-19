@@ -8,6 +8,7 @@ d. Some Built-in Modules In Node
     2. path
     3. fs
     4. http
-    5. events
+    5. util
+    6. events
 e. Event Loops, Async Pattern, Event Emitter, Streams
 f. Scaffolding Concepts
