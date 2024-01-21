@@ -1,6 +1,6 @@
-
 // dependencies
 const mathLibrary = require('./libs/math/math');
+// eslint-disable-next-line import/no-unresolved, import/extensions
 const quotesLibrary = require('./libs/quotes/quote');
 
 // app object - module scaffolding

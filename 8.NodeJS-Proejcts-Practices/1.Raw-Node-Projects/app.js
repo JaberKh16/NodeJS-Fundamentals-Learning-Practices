@@ -14,7 +14,7 @@ app.config = {
 app.createServer = () => {
     const server = http.createServer(app.handleServerReqResCallback);
     server.listen(app.config.port, app.config.host, () => {
-        console.log('Listening on port:3000');
+        console.log(`Listening on port: ${app.config.port}`);
     });
 };
 
@@ -22,3 +22,5 @@ app.createServer = () => {
 app.handleServerReqResCallback = (request, response) => {
     response.end('Hello');
 };
+// invokation
+app.createServer();
