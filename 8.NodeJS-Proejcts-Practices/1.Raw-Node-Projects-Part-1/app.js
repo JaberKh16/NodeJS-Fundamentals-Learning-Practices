@@ -1,6 +1,6 @@
 // dependencies
 const http = require('http');
-const { handleRequestResponse } = require('./helpers/handlereqreshanlders');
+const { handleRequestResponse } = require('./handlers/handlereqreshanlders');
 
 // module scaffolding
 const app = {};
