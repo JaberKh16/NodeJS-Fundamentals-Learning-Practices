@@ -1,5 +1,6 @@
 // dependencies
 const http = require('http');
+const { handleRequestResponse } = require('./handlers/handlereqreshanlders');
 
 // module scaffolding
 const app = {};
@@ -18,9 +19,8 @@ app.createServer = () => {
     });
 };
 
-// handle request response callback
-app.handleServerReqResCallback = (request, response) => {
-    response.end('Hello');
-};
+// callback handlers
+app.handleRequestResponse = handleRequestResponse;
+
 // invokation
 app.createServer();
