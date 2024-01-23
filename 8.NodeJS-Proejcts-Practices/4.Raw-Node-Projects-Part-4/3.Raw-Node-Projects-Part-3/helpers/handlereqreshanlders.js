@@ -1,184 +1,61 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable no-unused-expressions */
-// dependencies
-const { parseJSON } = require('../../helpers/utitlities');
-const dataLib = require('../../libraries/data');
-const hashLib = require('../../libraries/hashing');
-/* eslint-disable no-underscore-dangle */
+// dependecies
+const url = require('url');
+const { StringDecoder } = require('string_decoder');
+const { type } = require('os');
+const { routes } = require('../routes/routes');
+const { parseJSON } = require('./utitlities');
+
+// module scaffolding
 const handlers = {};
 
-handlers.userHandlers = (requestProperties, callback) => {
-    const accepdtedMethod = ['get', 'post', 'put', 'delete'];
-    if (accepdtedMethod.indexOf(requestProperties.method) > -1) {
-        handlers._users[requestProperties.method](requestProperties, callback);
-    } else {
-        callback(405); // to reject as status code 405
-    }
+// handle request response callback
+handlers.handleRequestResponse = (request, response) => {
+    // parse the url
+    const parsedURL = url.parse(request.url, true);
+    const parsedPath = parsedURL.pathname;
+    const trimParsedPath = parsedPath.replace(/^\/+|\/+$/g, '');
+    const method = request.method.toLowerCase();
+    const queryString = parsedURL.query;
+    const { headers } = request.headers;
+    // setup all request properties to an object
+    const reuqestObjProperties = {
+        parsedURL,
+        parsedPath,
+        trimParsedPath,
+        method,
+        queryString,
+        headers,
+    };
+
+    const decoder = new StringDecoder('utf8');
+    let data = '';
+
+    // setup a handler
+    const chosenHandler = routes[trimParsedPath] ? routes.trimParsedPath : undefined;
+    request.on('data', (bufferChunk) => {
+        data += decoder.write(bufferChunk);
+    });
+    request.on('end', () => {
+        data += decoder.end(); // to end the decoding
+        console.log(data);
+
+        // handle client data
+        reuqestObjProperties.body = parseJSON(data);
+
+        chosenHandler(reuqestObjProperties, (statusCodeValue, passedPayload) => {
+            let statusCode = statusCodeValue;
+            let payload = passedPayload;
+            statusCode = typeof statusCode === 'number' ? statusCode : 500;
+            payload = typeof payload === 'object' ? payload : {};
+            const payloadString = JSON.stringify(payload);
+            response.writeHead(statusCode, { 'Content-Type': 'application/json' });
+            response.end(payloadString);
+        });
+
+        response.end('Completed');
+    });
+
+    response.end('Hello');
 };
 
-// making users
-handlers._users = {};
-
-handlers._users.get = (requestProperties, callback) => {
-    // check the phone number is valid
-    const phone = typeof requestProperties.queryString.phone === 'string'
-        && requestProperties.queryString.phone.trim().length === 11
-            ? requestProperties.queryString.phone
-            : false;
-    if (phone) {
-        // look up the user
-        dataLib.read('users', phone, (error, userData) => {
-            const user = { ...parseJSON(userData) };
-            if (!error && userData) {
-                delete user.userPass;
-                callback(200, user);
-            } else {
-                callback(404, {
-                    error: 'Requested user not found.',
-                });
-            }
-        });
-    } else {
-        callback(404, {
-            error: 'Invalid phone number',
-        });
-    }
-};
-
-handlers._users.post = (requestProperties, callback) => {
-    const firstName = typeof requestProperties.body.firstName === 'string';
-    requestProperties.body.firstName.trim().length > 0 ? requestProperties.body.firstName : false;
-    const lastName = typeof requestProperties.body.lastName === 'string';
-    requestProperties.body.lastName.trim().length > 0 ? requestProperties.body.lastName : false;
-    const password = typeof requestProperties.body.password === 'string';
-    requestProperties.body.password.trim().length > 0 ? requestProperties.body.password : false;
-    const phone = typeof requestProperties.body.phone === 'string';
-    requestProperties.body.phone.trim().length === 11 ? requestProperties.body.phone : false;
-    const tosAgreements = typeof requestProperties.body.tosAgreements === 'boolean';
-    requestProperties.body.tosAgreements.trim().length > 0
-        ? requestProperties.body.tosAgreements
-        : false;
-
-    if (firstName && lastName && phone && password && tosAgreements) {
-        // check if the user already exist or not
-        dataLib.read('users', phone, (error, userData) => {
-            if (error) {
-                const usersInfo = {
-                    firstName,
-                    lastName,
-                    phone,
-                    tosAgreements,
-                    userPass: hashLib(password),
-                };
-                // store the user information
-                dataLib.create('users', phone, usersInfo, (errorCreate) => {
-                    if (!errorCreate) {
-                        callback(200, {
-                            message: 'Successfully created users.',
-                        });
-                    } else {
-                        callback(500, {
-                            error: 'Couldnt create user.',
-                        });
-                    }
-                });
-            } else {
-                callback(500, {
-                    error: 'There was a problem in server side',
-                });
-            }
-        });
-    } else {
-        callback(400, {
-            error: 'You have a problem in your request',
-        });
-    }
-};
-
-handlers._users.put = (requestProperties, callback) => {
-    const firstName = typeof requestProperties.body.firstName === 'string';
-    requestProperties.body.firstName.trim().length > 0 ? requestProperties.body.firstName : false;
-    const lastName = typeof requestProperties.body.lastName === 'string';
-    requestProperties.body.lastName.trim().length > 0 ? requestProperties.body.lastName : false;
-    const password = typeof requestProperties.body.password === 'string';
-    requestProperties.body.password.trim().length > 0 ? requestProperties.body.password : false;
-    const phone = typeof requestProperties.body.phone === 'string';
-    requestProperties.body.phone.trim().length === 11 ? requestProperties.body.phone : false;
-
-    if (phone) {
-        if (firstName || lastName || password) {
-            // lookup for user
-            dataLib.read('users', phone, (error, userData) => {
-                const user = userData;
-                if (!error && userData) {
-                    if (firstName) {
-                        user.firstName = firstName;
-                    }
-                    if (lastName) {
-                        user.lastName = lastName;
-                    }
-                    if (password) {
-                        user.password = hashLib(password);
-                    }
-                    // now store the information
-                    dataLib.update('users', phone, user, (errorUpdating) => {
-                        if (!errorUpdating) {
-                            callback(200, {
-                                message: 'User updated successfully.',
-                            });
-                        } else {
-                            callback(400, {
-                                error: 'You have a problem in your request.',
-                            });
-                        }
-                    });
-                } else {
-                    callback(400, {
-                        error: 'You have a problem in your request.',
-                    });
-                }
-            });
-        } else {
-            callback(400, {
-                error: 'You have a problem in your request.',
-            });
-        }
-    } else {
-        callback(400, {
-            error: 'Invalid phone number, please try again.',
-        });
-    }
-};
-
-handlers._users.delete = (requestProperties, callback) => {
-    const phone = typeof requestProperties.body.phone === 'string';
-    requestProperties.body.phone.trim().length === 11 ? requestProperties.body.phone : false;
-    if (phone) {
-        // lookup for the data
-        dataLib.read('users', phone, (error, userData) => {
-            if (!error && userData) {
-                dataLib.delete('users', phone, (errorDeletion) => {
-                    if (!errorDeletion) {
-                        callback(200, {
-                            error: 'User deleted successfully.',
-                        });
-                    } else {
-                        callback(400, {
-                            error: 'Unsuccessull deletion.',
-                        });
-                    }
-                });
-            } else {
-                callback(500, {
-                    error: 'There was a problem in server side.',
-                });
-            }
-        });
-    } else {
-        callback(400, {
-            error: 'Invalid phone number,please try again.',
-        });
-    }
-};
-
-module.exports = handlers;
+module.exports = handlers.handleRequestResponse;

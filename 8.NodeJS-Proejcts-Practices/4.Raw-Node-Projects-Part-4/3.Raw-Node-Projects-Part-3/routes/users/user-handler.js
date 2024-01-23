@@ -4,6 +4,8 @@
 const { parseJSON } = require('../../helpers/utitlities');
 const dataLib = require('../../libraries/data');
 const hashLib = require('../../libraries/hashing');
+const { tokenHandlers } = require('../token/token-handler');
+
 /* eslint-disable no-underscore-dangle */
 const handlers = {};
 
@@ -26,15 +28,25 @@ handlers._users.get = (requestProperties, callback) => {
             ? requestProperties.queryString.phone
             : false;
     if (phone) {
-        // look up the user
-        dataLib.read('users', phone, (error, userData) => {
-            const user = { ...parseJSON(userData) };
-            if (!error && userData) {
-                delete user.userPass;
-                callback(200, user);
+        // verify token
+        const token = typeof requestProperties.headers.token === 'string' ? requestProperties.headers.token : false;
+        tokenHandlers._token.verify(token, token, (tokenId) => {
+            if (tokenId) {
+                // look up the user
+                dataLib.read('users', phone, (error, userData) => {
+                    const user = { ...parseJSON(userData) };
+                    if (!error && userData) {
+                        delete user.userPass;
+                        callback(200, user);
+                    } else {
+                        callback(404, {
+                            error: 'Requested user not found.',
+                        });
+                    }
+                });
             } else {
-                callback(404, {
-                    error: 'Requested user not found.',
+                callback(403, {
+                    error: 'Authentication failure.',
                 });
             }
         });
@@ -60,31 +72,41 @@ handlers._users.post = (requestProperties, callback) => {
         : false;
 
     if (firstName && lastName && phone && password && tosAgreements) {
-        // check if the user already exist or not
-        dataLib.read('users', phone, (error, userData) => {
-            if (error) {
-                const usersInfo = {
-                    firstName,
-                    lastName,
-                    phone,
-                    tosAgreements,
-                    userPass: hashLib(password),
-                };
-                // store the user information
-                dataLib.create('users', phone, usersInfo, (errorCreate) => {
-                    if (!errorCreate) {
-                        callback(200, {
-                            message: 'Successfully created users.',
+        // verify token
+        const token = typeof requestProperties.headers.token === 'string' ? requestProperties.headers.token : false;
+        tokenHandlers._token.verify(token, token, (tokenId) => {
+            if (tokenId) {
+                // check if the user already exist or not
+                dataLib.read('users', phone, (error, userData) => {
+                    if (error) {
+                        const usersInfo = {
+                            firstName,
+                            lastName,
+                            phone,
+                            tosAgreements,
+                            userPass: hashLib(password),
+                        };
+                        // store the user information
+                        dataLib.create('users', phone, usersInfo, (errorCreate) => {
+                            if (!errorCreate) {
+                                callback(200, {
+                                    message: 'Successfully created users.',
+                                });
+                            } else {
+                                callback(500, {
+                                    error: 'Couldnt create user.',
+                                });
+                            }
                         });
                     } else {
                         callback(500, {
-                            error: 'Couldnt create user.',
+                            error: 'There was a problem in server side',
                         });
                     }
                 });
             } else {
-                callback(500, {
-                    error: 'There was a problem in server side',
+                callback(403, {
+                    error: 'Authentication failure.',
                 });
             }
         });
