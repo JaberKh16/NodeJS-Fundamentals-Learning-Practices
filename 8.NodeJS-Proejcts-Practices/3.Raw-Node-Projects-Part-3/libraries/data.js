@@ -13,8 +13,8 @@ lib.create = (dir, file, data, callback) => {
             // convert data to string
             const stringData = JSON.stringify(data);
             // wirte data to file and close it
-            fs.writeFile(fileDescriptor, stringData, (error, dataFileDescriptor) => {
-                if (!error) {
+            fs.writeFile(fileDescriptor, stringData, (errorWriting, dataFileDescriptor) => {
+                if (!errorWriting) {
                     fs.close(dataFileDescriptor, (errorClosing) => {
                         if (!errorClosing) {
                             callback(false);

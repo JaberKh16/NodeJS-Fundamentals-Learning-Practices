@@ -3,6 +3,7 @@ const url = require('url');
 const { StringDecoder } = require('string_decoder');
 const { type } = require('os');
 const { routes } = require('../routes/routes');
+const { parseJSON } = require('./utitlities');
 
 // module scaffolding
 const handlers = {};
@@ -31,22 +32,26 @@ handlers.handleRequestResponse = (request, response) => {
 
     // setup a handler
     const chosenHandler = routes[trimParsedPath] ? routes.trimParsedPath : undefined;
-
-    chosenHandler(reuqestObjProperties, (statusCodeValue, passedPayload) => {
-        let statusCode = statusCodeValue;
-        let payload = passedPayload;
-        statusCode = typeof statusCode === 'number' ? statusCode : 500;
-        payload = typeof payload === 'object' ? payload : {};
-        const payloadString = JSON.stringify(payload);
-        response.writeHead(statusCode, { 'Content-Type': 'application/json' });
-        response.end(payloadString);
-    });
     request.on('data', (bufferChunk) => {
         data += decoder.write(bufferChunk);
     });
     request.on('end', () => {
         data += decoder.end(); // to end the decoding
         console.log(data);
+
+        // handle client data
+        reuqestObjProperties.body = parseJSON(data);
+
+        chosenHandler(reuqestObjProperties, (statusCodeValue, passedPayload) => {
+            let statusCode = statusCodeValue;
+            let payload = passedPayload;
+            statusCode = typeof statusCode === 'number' ? statusCode : 500;
+            payload = typeof payload === 'object' ? payload : {};
+            const payloadString = JSON.stringify(payload);
+            response.writeHead(statusCode, { 'Content-Type': 'application/json' });
+            response.end(payloadString);
+        });
+
         response.end('Completed');
     });
 

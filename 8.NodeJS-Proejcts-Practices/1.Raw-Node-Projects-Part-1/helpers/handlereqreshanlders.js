@@ -3,6 +3,7 @@ const url = require('url');
 const { StringDecoder } = require('string_decoder');
 const { type } = require('os');
 const { routes } = require('../routes/routes');
+const { notFoundPage } = require('../routes/pages/not-found-handlers');
 
 // module scaffolding
 const handlers = {};
@@ -30,7 +31,7 @@ handlers.handleRequestResponse = (request, response) => {
     let data = '';
 
     // setup a handler
-    const chosenHandler = routes[trimParsedPath] ? routes.trimParsedPath : undefined;
+    const chosenHandler = routes[trimParsedPath] ? routes.trimParsedPath : notFoundPage;
 
     chosenHandler(reuqestObjProperties, (statusCodeValue, passedPayload) => {
         let statusCode = statusCodeValue;
