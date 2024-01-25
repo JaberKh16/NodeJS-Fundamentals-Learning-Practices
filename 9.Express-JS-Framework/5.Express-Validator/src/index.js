@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /*
     Middleware Concepts In Express
     ==============================
@@ -22,6 +23,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-restricted-globals */
 const express = require('express');
+const { query } = require('express-validator');
 const users = require('../data/users-data');
 
 // creating instance of express
@@ -56,6 +58,7 @@ app.get(
         console.log('Base URL');
         next();
     },
+    query(),
     (req, res) => {
         res.send('Welcome to the page');
     },

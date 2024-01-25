@@ -2,12 +2,20 @@
     Middleware Concepts In Express
     ==============================
     Middleware is nothing but the routing way to define
-    whats to do while routing.
+    whats to do while routing. It is a function that
+    have access to the 'request' and 'response' object
+    and the next() function which, when invoked executes
+    the middleware succeeding the current middleware.
+
+    If the current middlware function does not end the
+    request-response cycle, it must call next() to pass
+    control to the next middlware function, otherwise the
+    request will be left hanging.
 
     Syntax:
-        a. const middleware = (req, res, next) =>{}
-        b. app.get('url', (req, res, next)=>{}, (req, res)=>{});
-        c. app.get('url', (req, res, next)=>{}, (req, res, next)=>{}, (req, res)=>{});
+        a. const middleware = (req, res, next) =>{ next(); }
+        b. app.get('url', (req, res, next)=>{}, (req, res)=>{next();});
+        c. app.get('url', (req, res, next)=>{}, (req, res, next)=>{next();}, (req, res)=>{});
 
     In the Middleware, next() is important which needs to be passed so that
     routing can go further.
@@ -15,6 +23,16 @@
     Also, chaining of middleware is possible like see in the 'c' on the
     syntax section.
 
+    Note: Middleware function order is matter because the order is called
+    that order it will be executed.
+
+    Use Case Of Middlware In Express
+    --------------------------------
+    a. Application-Level Middleware
+    b. Router-Level Middleware
+    c. Error-Handling Middleware
+    d. Built-In Middleware
+    e. Third-Party Middleware
 */
 /* eslint-disable quotes */
 /* eslint-disable radix */
