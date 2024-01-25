@@ -1,4 +1,4 @@
-const { express } = require('express');
+const express = require('express');
 
 // creating instance of express
 const app = express();
@@ -20,5 +20,5 @@ app.get('/api/users', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log('Server running on port:{PORT}');
+    console.log(`Server running on port:${PORT}`);
 });

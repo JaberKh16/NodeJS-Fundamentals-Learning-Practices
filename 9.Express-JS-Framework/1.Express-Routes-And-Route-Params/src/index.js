@@ -129,7 +129,9 @@
 /* eslint-disable quotes */
 /* eslint-disable radix */
 /* eslint-disable no-restricted-globals */
+// importing
 const express = require('express');
+const users = require('../data/users-data');
 
 // creating instance of express
 const app = express();
@@ -142,28 +144,19 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/users', (req, res) => {
-    const users = [
-        { id: 1, userName: 'adi', displayName: 'Adi' },
-        { id: 2, userName: 'mark', displayName: 'Mark' },
-        { id: 4, userName: 'niyal', displayName: 'Niyal' },
-    ];
     res.send({ users });
 });
 
 // route params
-const users = [
-    { id: 1, userName: 'adi', displayName: 'Adi' },
-    { id: 2, userName: 'mark', displayName: 'Mark' },
-    { id: 4, userName: 'niyal', displayName: 'Niyal' },
-];
 app.get('/api/users/:id', (req, res) => {
-    const { params } = req.params;
+    const { params } = req;
     console.log(params);
     const parsedId = parseInt(params.id);
+    // console.log(parsedId);
     if (isNaN(parsedId)) {
         return res.status(400).send({ message: 'Bad Request' });
     }
-    const findUser = users.find((user) => user.id === parsedId);
+    const findUser = users.usersInfo.find((user) => user.id === parsedId);
     if (!findUser) {
         return res.sendStatus(404);
     }
