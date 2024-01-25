@@ -1,7 +1,9 @@
+/* eslint-disable consistent-return */
 /* eslint-disable quotes */
 /* eslint-disable radix */
 /* eslint-disable no-restricted-globals */
 const express = require('express');
+const users = require('../data/users-data');
 
 // creating instance of express
 const app = express();
@@ -17,28 +19,18 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/users', (req, res) => {
-    const users = [
-        { id: 1, userName: 'adi', displayName: 'Adi' },
-        { id: 2, userName: 'mark', displayName: 'Mark' },
-        { id: 4, userName: 'niyal', displayName: 'Niyal' },
-    ];
     res.send({ users });
 });
 
 // route params
-const users = [
-    { id: 1, userName: 'adi', displayName: 'Adi' },
-    { id: 2, userName: 'mark', displayName: 'Mark' },
-    { id: 4, userName: 'niyal', displayName: 'Niyal' },
-];
 app.get('/api/users/:id', (req, res) => {
-    const { params } = req.params;
+    const { params } = req;
     console.log(params);
     const parsedId = parseInt(params.id);
     if (isNaN(parsedId)) {
         return res.status(400).send({ message: 'Bad Request' });
     }
-    const findUser = users.find((user) => user.id === parsedId);
+    const findUser = users.usersInfo.find((user) => user.id === parsedId);
     if (!findUser) {
         return res.sendStatus(404);
     }
@@ -55,7 +47,7 @@ app.get('/api/users/:id', (req, res) => {
         return res.send(users);
     }
     if (filter && value) {
-        return res.send(users.filter((user) => user[filter].includes(value)));
+        return res.send(users.userInfo.filter((user) => user[filter].includes(value)));
     }
 });
 
@@ -81,7 +73,7 @@ app.post('/api/users/:id', (req, res) => {
     if (isNaN(parsedId)) {
         return res.sendStatus(400);
     }
-    const findUserIndex = users.findIndex((user) => user.id === parsedId);
+    const findUserIndex = users.userInfo.findIndex((user) => user.id === parsedId);
     if (findUserIndex === -1) {
         return res.sendStatus(404);
     }
@@ -102,7 +94,7 @@ app.patch('/api/users/:id', (req, res) => {
     if (isNaN(parsedId)) {
         return res.sendStatus(400);
     }
-    const findUserIndex = users.findIndex((user) => user.id === parsedId);
+    const findUserIndex = users.usersInfo.findIndex((user) => user.id === parsedId);
     if (findUserIndex === -1) {
         return res.sendStatus(404);
     }
@@ -122,7 +114,7 @@ app.delete('/api/users/:id', (req, res) => {
     if (isNaN(parsedId)) {
         return res.sendStatus(400);
     }
-    const findUserIndex = users.findIndex((user) => user.id === parsedId);
+    const findUserIndex = users.userInfo.findIndex((user) => user.id === parsedId);
     if (findUserIndex === -1) {
         return res.sendStatus(404);
     }
