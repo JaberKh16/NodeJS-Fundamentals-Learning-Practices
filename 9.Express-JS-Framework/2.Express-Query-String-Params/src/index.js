@@ -38,17 +38,14 @@ app.get('/api/users/:id', (req, res) => {
     const {
         queryParams: { filter, value },
     } = req;
+    console.log(req);
     console.log(req.query);
     // when query parameter is undefined
     if (!filter && !value) {
         return res.send(users);
     }
     if (filter && value) {
-        return res.send(
-            users.filter((user) => {
-                user[filter].includes(value);
-            })
-        );
+        return res.send(users.userInfo.filter((user) => user[filter].includes(value)));
     }
 });
 app.listen(PORT, () => {
