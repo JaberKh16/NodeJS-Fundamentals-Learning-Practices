@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable quotes */
 /* eslint-disable radix */
 /* eslint-disable no-restricted-globals */
