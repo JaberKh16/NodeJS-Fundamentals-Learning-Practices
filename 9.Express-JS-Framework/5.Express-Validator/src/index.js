@@ -18,18 +18,14 @@
 */
 /* eslint-disable quotes */
 /* eslint-disable radix */
+/* eslint-disable consistent-return */
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-restricted-globals */
 const express = require('express');
+const users = require('../data/users-data');
 
 // creating instance of express
 const app = express();
-
-// define users object
-const users = [
-    { id: 1, userName: 'adi', displayName: 'Adi' },
-    { id: 2, userName: 'mark', displayName: 'Mark' },
-    { id: 4, userName: 'niyal', displayName: 'Niyal' },
-];
 
 // middleware
 app.use(express.json()); // getting json setup
@@ -46,7 +42,7 @@ const resolvedUserIdMiddleware = (request, response, next) => {
     if (isNaN(parsedId)) {
         return response.sendStatus(400);
     }
-    const findUserIndex = users.findIndex((user) => user.id === parsedId);
+    const findUserIndex = users.usersInfo.findIndex((user) => user.id === parsedId);
     request.findUserIndex = findUserIndex;
     return next();
 };
@@ -77,7 +73,7 @@ app.get('/api/users/:id', (req, res) => {
     if (isNaN(parsedId)) {
         return res.status(400).send({ message: 'Bad Request' });
     }
-    const findUser = users.find((user) => user.id === parsedId);
+    const findUser = users.usersInfo.find((user) => user.id === parsedId);
     if (!findUser) {
         return res.sendStatus(404);
     }
@@ -94,7 +90,7 @@ app.get('/api/users/:id', (req, res) => {
         return res.send(users);
     }
     if (filter && value) {
-        return res.send(users.filter((user) => user[filter].includes(value)));
+        return res.send(users.usersInfo.filter((user) => user[filter].includes(value)));
     }
 });
 
@@ -106,7 +102,7 @@ app.post('/api/users', (req, res) => {
         id: users[users.length - 1].id + 1,
         ...body,
     };
-    users.push(newUsers);
+    users.usersInfo.push(newUsers);
     return res.status(201).send(newUsers);
 });
 
@@ -114,7 +110,7 @@ app.post('/api/users', (req, res) => {
 app.post('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
     const { body, findUserIndex } = req;
 
-    users[findUserIndex] = {
+    users.usersInfo[findUserIndex] = {
         id: findUserIndex,
         ...body,
     };
@@ -125,7 +121,7 @@ app.post('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
 app.patch('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
     const { body, findUserIndex } = req;
 
-    users[findUserIndex] = {
+    users.usersInfo[findUserIndex] = {
         ...users[findUserIndex],
         ...body,
     };
@@ -135,7 +131,7 @@ app.patch('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
 // delete request
 app.delete('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
     const { findUserIndex } = req;
-    users.splice(findUserIndex, 1);
+    users.userInfo.splice(findUserIndex, 1);
     return res.sendStatus(200);
 });
 

@@ -83,7 +83,7 @@ app.put('/api/users/:id', (req, res) => {
     }
 
     // Update the found user in the users array
-    users[findUserIndex] = {
+    users.usersInfo[findUserIndex] = {
         id: parsedId,
         ...body,
     };
@@ -107,7 +107,7 @@ app.patch('/api/users/:id', (req, res) => {
     if (findUserIndex === -1) {
         return res.sendStatus(404);
     }
-    users[findUserIndex] = {
+    users.usersInfo[findUserIndex] = {
         ...users[findUserIndex],
         ...body,
     };
@@ -127,7 +127,7 @@ app.delete('/api/users/:id', (req, res) => {
     if (findUserIndex === -1) {
         return res.sendStatus(404);
     }
-    users.splice(findUserIndex, 1);
+    users.usersInfo.forEachsplice(findUserIndex, 1);
     return res.sendStatus(200);
 });
 
