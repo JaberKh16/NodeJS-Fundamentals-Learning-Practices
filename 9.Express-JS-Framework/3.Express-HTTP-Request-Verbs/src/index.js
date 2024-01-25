@@ -51,37 +51,45 @@ app.get('/api/users/:id', (req, res) => {
     }
 });
 
-// post request
+// post request - setup request body with new item {}
 app.post('/api/users', (req, res) => {
     console.log(req.body);
     const { body } = req.body;
     const newUsers = {
-        id: users[users.length - 1].id + 1,
-        ...body,
+        id: users[users.length - 1].id + 1, // set the id of the user
+        ...body, // body has the request body response
     };
     users.push(newUsers);
+    // send the updated users array in the response
     return res.status(201).send(newUsers);
 });
 
-// post request - full update
-app.post('/api/users/:id', (req, res) => {
+// put request - full update
+app.put('/api/users/:id', (req, res) => {
     const {
         body,
         params: { id },
     } = req;
     const parsedId = parseInt(id);
+
     if (isNaN(parsedId)) {
         return res.sendStatus(400);
     }
-    const findUserIndex = users.userInfo.findIndex((user) => user.id === parsedId);
+
+    const findUserIndex = users.findIndex((user) => user.params.id === parsedId);
+
     if (findUserIndex === -1) {
         return res.sendStatus(404);
     }
+
+    // Update the found user in the users array
     users[findUserIndex] = {
         id: parsedId,
         ...body,
     };
-    return res.sendStatus(200);
+
+    // send the updated users array in the response
+    return res.status(200).send(users);
 });
 
 // patch request - partial update
@@ -90,6 +98,7 @@ app.patch('/api/users/:id', (req, res) => {
         body,
         params: { id },
     } = req;
+    console.log(id);
     const parsedId = parseInt(id);
     if (isNaN(parsedId)) {
         return res.sendStatus(400);
