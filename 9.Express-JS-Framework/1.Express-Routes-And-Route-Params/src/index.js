@@ -100,6 +100,14 @@
         i. res.sendStatus() --> to set the response status code and send its
                                 string representation as the response body
 
+    Request Object Properties
+    ------------------------
+        a. req.body     --> body of http request
+        b. req.cookies  --> cookies of http request
+        c. req.headers  --> headers of http request
+        d. req.params   --> parameters of http
+        e. req.query    --> query of http request
+
     Express Route Class
     -------------------
     'express.Router' class to create modular, mountable route handlers.

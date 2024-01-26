@@ -1,20 +1,23 @@
-/* eslint-disable import/no-extraneous-dependencies */
 /*
-    Middleware Concepts In Express
-    ==============================
-    Middleware is nothing but the routing way to define
-    whats to do while routing.
+    Express Validator Middleware Concepts In Express
+    =================================================
+    Express Validator is a third party middleware to work with
+    the validation in server side.
 
-    Syntax:
-        a. const middleware = (req, res, next) =>{}
-        b. app.get('url', (req, res, next)=>{}, (req, res)=>{});
-        c. app.get('url', (req, res, next)=>{}, (req, res, next)=>{}, (req, res)=>{});
+    Some Functions To Work With Express Validator
+    ---------------------------------------------
+    a. query()              --> to work with the query params validation
+    b. body()               --> to work with the body validation with req.body
+    c. validationResult()   --> to work with the validation result error object
+    d. matchData()          --> to work with response data
+    e. check()              --> used for validating and sanitizing http request
+    f. cookies()            --> to work with req.cookies
+    g. header()             --> to work with req.headers
+    h. param()              --> to work with req.params
+    i. query()              --> to work with req.query
 
-    In the Middleware, next() is important which needs to be passed so that
-    routing can go further.
-
-    Also, chaining of middleware is possible like see in the 'c' on the
-    syntax section.
+    Follow the link -
+    [https://express-validator.github.io/docs/guides/getting-started]
 
 */
 /* eslint-disable quotes */
@@ -22,121 +25,90 @@
 /* eslint-disable consistent-return */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-restricted-globals */
+/* eslint-disable array-callback-return */
+/* eslint-disable import/no-extraneous-dependencies */
 const express = require('express');
-const { query } = require('express-validator');
+const { query, validationResult } = require('express-validator');
 const users = require('../data/users-data');
 
 // creating instance of express
 const app = express();
 
-// middleware
-app.use(express.json()); // getting json setup
-const loggingMiddleware = (reqeust, response, next) => {
-    console.log(reqeust.method, reqeust.url);
-    next();
-};
-app.use(loggingMiddleware);
-const resolvedUserIdMiddleware = (request, response, next) => {
-    const {
-        params: { id },
-    } = request;
-    const parsedId = parseInt(id);
-    if (isNaN(parsedId)) {
-        return response.sendStatus(400);
-    }
-    const findUserIndex = users.usersInfo.findIndex((user) => user.id === parsedId);
-    request.findUserIndex = findUserIndex;
-    return next();
-};
-
 // setup port number
 const PORT = process.env.PORT || 3000;
-// setup routes
-app.get(
-    '/',
-    (req, res, next) => {
-        console.log('Base URL');
-        next();
-    },
-    query(),
-    (req, res) => {
-        res.send('Welcome to the page');
-    },
-);
 
 app.get('/api/users', (req, res) => {
     res.send({ users });
 });
 
 // route params
-app.get('/api/users/:id', (req, res) => {
-    const { params } = req.params;
-    console.log(params);
-    const parsedId = parseInt(params.id);
-    if (isNaN(parsedId)) {
-        return res.status(400).send({ message: 'Bad Request' });
-    }
-    const findUser = users.usersInfo.find((user) => user.id === parsedId);
-    if (!findUser) {
-        return res.sendStatus(404);
-    }
-    return res.send(findUser);
-});
 // setup query string
-app.get('/api/users/:id', (req, res) => {
-    const {
-        queryParams: { filter, value },
-    } = req;
-    console.log(req.query);
-    // when query parameter is undefined
-    if (!filter && !value) {
-        return res.send(users);
-    }
-    if (filter && value) {
-        return res.send(users.usersInfo.filter((user) => user[filter].includes(value)));
-    }
-});
+app.get(
+    '/api/users/',
+    query('filter').toString().toLowerCase(),
+    (req, res) => {
+        const {
+            queryParams: { filter, value },
+        } = req;
+        console.log(req.query);
+        console.log(req); // can see express-validator info
+        if (filter && value) {
+            return res.send(
+                users.usersInfo.filter((user) => {
+                    user[filter].includes(value);
+                }),
+            );
+        }
+    },
+);
 
-// post request
-app.post('/api/users', (req, res) => {
-    console.log(req.body);
-    const { body } = req.body;
-    const newUsers = {
-        id: users[users.length - 1].id + 1,
-        ...body,
-    };
-    users.usersInfo.push(newUsers);
-    return res.status(201).send(newUsers);
-});
+app.get(
+    '/api/users-1/',
+    query('filter').toString().isLength({ min: 4, max: 10 }),
+    (req, res) => {
+        const {
+            queryParams: { filter, value },
+        } = req;
+        // get the error info from express-validator middleware
+        const resultErr = validationResult(req);
+        console.log(resultErr);
+        console.log(req.query);
+        console.log(req); // can see express-validator info
+        if (filter && value) {
+            return res.send(
+                users.usersInfo.filter((user) => {
+                    user[filter].includes(value);
+                }),
+            );
+        }
+    },
+);
 
-// post request - full update
-app.post('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
-    const { body, findUserIndex } = req;
-
-    users.usersInfo[findUserIndex] = {
-        id: findUserIndex,
-        ...body,
-    };
-    return res.sendStatus(200);
-});
-
-// patch request - partial update
-app.patch('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
-    const { body, findUserIndex } = req;
-
-    users.usersInfo[findUserIndex] = {
-        ...users[findUserIndex],
-        ...body,
-    };
-    return res.status(200).send(users);
-});
-
-// delete request
-app.delete('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
-    const { findUserIndex } = req;
-    users.userInfo.splice(findUserIndex, 1);
-    return res.sendStatus(200);
-});
+app.get(
+    '/api/users-2/',
+    query('filter')
+        .toString()
+        .withMessage('must be a string')
+        .isLength({ min: 4, max: 10 })
+        .withMessage('Length must 4-10 characters'),
+    (req, res) => {
+        const {
+            queryParams: { filter, value },
+        } = req;
+        // get the error info from express-validator middleware
+        const resultErr = validationResult(req);
+        console.log(resultErr);
+        console.log(req.query);
+        console.log(req); // can see express-validator info
+        if (filter && value) {
+            return res.send(
+                users.usersInfo.filter((user) => {
+                    user[filter].includes(value);
+                }),
+            );
+        }
+    },
+);
 
 // listen request
 app.listen(PORT, () => {
