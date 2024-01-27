@@ -9,7 +9,7 @@ routes.get('/get-users', (request, response) => {
     console.log(cookies); // resulted 'undefined'
     console.log(request.headers.cookie);
     // set coookie
-    response.cookie('user-info', users, { maxAge: 30000 });
+    response.cookie('userInfo', users, { maxAge: 30000 });
     // required cookie-parser to parse the cookie from the request
     const cookieInfo = request.cookies;
     console.log(cookieInfo);
