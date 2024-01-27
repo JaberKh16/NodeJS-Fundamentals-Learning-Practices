@@ -75,6 +75,15 @@
     To modify session object-
         request.session.visited = boolean; // to setup session id not changing on request
 
+    To get session history-
+        request.sessionStore.get(request.sessionID, (error, sessionData) => {
+            if (error) {
+                console.log(error);
+                throw error;
+            }
+            console.log(sessionData);
+        });
+
 */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable prettier/prettier */
@@ -83,6 +92,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const userRoutes = require('../routes/user-route');
+const userAuthRoutes = require('../routes/user-auth');
 
 const app = express();
 
@@ -103,6 +113,8 @@ app.use(
 );
 // setup the user routes
 app.use(userRoutes);
+// setup the user auth routes
+app.use(userAuthRoutes);
 
 app.get('/', (request, response) => {
     const sessionInfo = {
@@ -112,6 +124,14 @@ app.get('/', (request, response) => {
     console.log(sessionInfo);
     // to modify session to be persistence
     request.session.visited = true;
+    // getting session history
+    request.sessionStore.get(request.sessionID, (error, sessionData) => {
+        if (error) {
+            console.log(error);
+            throw error;
+        }
+        console.log(sessionData);
+    });
     return response.status(200).send(sessionInfo);
 });
 
