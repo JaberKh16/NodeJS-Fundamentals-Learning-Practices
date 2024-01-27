@@ -77,20 +77,12 @@
     Since Promises automatically catch both synchronous errors and rejected promises,
     can simply provide next as the final catch handler and Express will catch errors,
     because the catch handler is given the error as the first argument.
-
+    Example-
         app.get('/', (req, res, next) => {
             Promise.resolve().then(() => {
                 throw new Error('BROKEN')
             }).catch(next) // Errors will be passed to Express.
         })
-    Some Functions To Work With Express Validator
-    ---------------------------------------------
-    a. query()              --> to work with the query params validation
-    b. body()               --> to work with the body validation
-    c. validationResult()   --> to work with the validation result error object
-
-    Follow the link -
-    [https://express-validator.github.io/docs/guides/getting-started]
 
 */
 /* eslint-disable quotes */
