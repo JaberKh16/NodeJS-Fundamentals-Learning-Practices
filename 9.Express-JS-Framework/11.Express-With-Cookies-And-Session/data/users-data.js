@@ -1,5 +1,6 @@
 const users = {};
 
+// define users info
 users.usersInfo = [
     {
         id: 1,

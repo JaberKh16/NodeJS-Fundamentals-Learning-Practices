@@ -93,6 +93,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const userRoutes = require('../routes/user-route');
 const userAuthRoutes = require('../routes/user-auth');
+const productCartRoutes = require('../routes/product-cart');
 
 const app = express();
 
@@ -105,7 +106,7 @@ app.use(
     session({
         secret: 'Session-Key',
         saveUninitialized: false,
-        resave: true,
+        resave: false,
         cookie: {
             maxAge: Number(3000 * 60),
         },
@@ -115,6 +116,8 @@ app.use(
 app.use(userRoutes);
 // setup the user auth routes
 app.use(userAuthRoutes);
+// setup the cart product routes
+app.use(productCartRoutes);
 
 app.get('/', (request, response) => {
     const sessionInfo = {
