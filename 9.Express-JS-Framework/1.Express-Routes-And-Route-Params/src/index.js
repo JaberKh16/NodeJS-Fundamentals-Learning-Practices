@@ -14,13 +14,13 @@
 
     Some Use Case Of Express Instance
     ---------------------------------
-    a. app.all()    --> to handle all HTPP methods
+    a. app.all()    --> to handle all HTTP methods
     b. app.use()    --> to specify middleware as callback
-    c. app.get()    --> to perform HTPP GET reuqest
-    d. app.post()   --> to perform HTPP POST reuqest
-    e. app.put()    --> to perform HTPP PUT reuqest
-    f. app.patch()  --> to perform HTPP PATCH reuqest
-    g. app.delete() --> to perform HTPP DELETE reuqest
+    c. app.get()    --> to perform HTTP GET reuqest
+    d. app.post()   --> to perform HTTP POST reuqest
+    e. app.put()    --> to perform HTTP PUT reuqest
+    f. app.patch()  --> to perform HTTP PATCH reuqest
+    g. app.delete() --> to perform HTTP DELETE reuqest
     h. app.route()  --> to create a chaining of routes.
 
     Routing methods can have more than one callback function as arguments.
