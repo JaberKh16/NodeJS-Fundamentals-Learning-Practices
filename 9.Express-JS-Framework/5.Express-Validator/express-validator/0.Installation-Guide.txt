@@ -1,0 +1,27 @@
+Express Validator Middleware Package
+====================================
+'express-validator' is a set of express.js middlewares that wraps
+the extensive collection of validators and sanitization functions
+to work with those features offered by 'validator.js'.
+
+Support
+-------
+1. express.js
+2. any http server library containing-
+    a. req.body     --> body of the http request(value, JS-primitives, non-primitives)
+    b. req.cookies  --> cookies of the http request(parsed as object)
+    c. req.headers  --> headers sent along with http request s
+    d. req.params   --> params of the http request(an object from name to value)
+    e. req.query    --> query of the http request(portion after ?)
+
+
+Library With Express Validator
+------------------------------
+Use the following link - [http://restify.com/]
+
+
+Installation Command
+--------------------
+Use the command:
+    $ npm install express-validator
+
