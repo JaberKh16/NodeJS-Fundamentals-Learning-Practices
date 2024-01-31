@@ -43,11 +43,14 @@
 
     a. To Work With HTML Tags:
         a. div.main-header                  --> to define single class
-        b. div.main-header.text-danger      --> to define multiple clasess
-        c. .content-wrapper                 --> when an element is div tag doesn't require 'div' to
+        b. div#main-header                  --> to define single id literal
+        c. div.main-header.text-danger      --> to define multiple clasess
+        d. .content-wrapper                 --> when an element is div tag doesn't require 'div' to
                                                 specify just classname works
-        d. div.content-wrapper Write page   --> to define normal text inside tag use space
-        e. a.nav-link(href='/')             --> to define attribute inside use ()
+        e. #content-wrapper                 --> when an element is div tag doesn't require 'div' to
+                                                specify just idname works
+        f. div.content-wrapper Write page   --> to define normal text inside tag use space
+        g. a.nav-link(href='/')             --> to define attribute inside use ()
     b. To Work With JS Variale Rendering:
         a. #{varName}                       --> to work with variable
         b. each varName in array/object     --> to setup looping
@@ -135,7 +138,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // Setup template engine - ejs
 app.set('views', pugFilePathObj.filePath);
-app.set('view engine', 'ejs');
+app.set('view engine', 'pug');
 
 // // Setup template engine - ejs
 // app.set('views', ejsFilePathObj.filePath);

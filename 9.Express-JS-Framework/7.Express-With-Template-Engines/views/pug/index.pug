@@ -1,6 +1,10 @@
-extends #{filePathObj.headerComponent}/layout/header-layout.pug
-extends #{filePathObj.headerComponent}/layout/main-layout.pug
-extends #{filePathObj.headerComponent}/layout/nav-layout.pug
+//- Declaration of template inheritance ("extends") should be the first thing 
+//- in the file. 
+//- There can only be one extends statement per file.
+//- thus use 'include'
+include layouts/header-layout.pug
+include layouts/nav-layout.pug
+include layouts/main-layout.pug
 
 block header
   header

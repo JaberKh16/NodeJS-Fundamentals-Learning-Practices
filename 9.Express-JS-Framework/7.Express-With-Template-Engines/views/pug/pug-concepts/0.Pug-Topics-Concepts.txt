@@ -1,0 +1,452 @@
+Pug Language Concepts Learning
+==============================
+a. Working With Attributes:
+    1. defining multiple attributes
+        - Attributes can be define inside (href='', data-toggle='')
+    2. defining attributes with long value
+        - attributes with long values can be define using '{}'
+        Example:    
+            input(data-json({
+                "very-long": "piece of ",
+                "data": true
+            }))
+    3. with quoted/conflicting attributes
+        - attributes are conflicting with js syntax such as [] or (), 
+          enclose them with '' or "" is required.
+        Example:
+            div(class='div-class', (click)= 'doSomething()') # (click) is considers as js function call
+        To fix this use-
+            div(class='div-class', '(click)' = 'doSomething()')
+    4. passing variables to attributes
+        - to pass variables to attributes use the following ways:
+                -var url = 'something.com'
+                a(href=$(url)) Click here
+                - var btnType = 'info'
+                - var btnSize = 'lg'
+                button(type='button' class='btn btn-' + btnType + ' btn-' + btnSize)
+                |
+                |
+                button(type='button' class=`btn btn-${btnType} btn-${btnSize}`)
+
+    5. working with unescaped attributes
+        - by default all attributes are escaped - speciall characters are replaced with
+        with escape sequence to prevent cross site attack. If required use != instead of =
+        Example-
+            div(escaped ='<code>')
+            div(unescaped !='<code>')
+    6. working with boolean attributes
+        - boolean attributes also aquire programming concepts- Booleans basically
+        mirrored by Pug.
+        Example-
+            input(type='checkbox' checked)
+            input(type='checkbox' checked=true)
+            input(type='checkbox' checked=false)
+            input(type='checkbox' checked=true.toString())
+            doctype html  # for 'html' pug knows not to mirror
+    7. working with style attributes
+        - 'style' can be string as well as an object
+        Example-
+            p(style="background: blue")
+            body(style={background-color:'#ddccaa', color:'black'})
+    8. working with class attributes
+        - 'class' can be string like normal attribut, but it can also be array or object 
+        of class names.
+        Example-
+            - var classes = ['foo', 'bar', 'baz']
+            a(class=classes)
+            //- the class attribute may also be repeated to merge arrays
+            a.bang(class=classes class=['bing'])
+
+            - var currentUrl = '/about'
+            a(class={active: currentUrl === '/'} href='/') Home
+            |
+            |
+            a(class={active: currentUrl === '/about'} href='/about') About
+
+b. Working With Normal JS Expresion/JS Variable, directly in .pug File:
+    - use the following way:
+        - const authenticated= false;
+        body(class=authenticated ? 'auth': '')
+c. Working With Multi-Line:
+    - use pipe(|) to make a line.
+    Example:
+        html
+            head
+            |
+            |
+            title
+d. Working With Case Conditionals
+    1. working with 'case' statement
+        - 'case' statement in pug is shorthand for 'switch' in programming concepts.
+        - simmilar like syntax as switch statement but the difference is when any
+        block is empty then need to use 'break'.
+        Example-
+            1. Non Block Expression With (Fall Through, break)
+                -var value = 1;
+                case value
+                    when 0
+                        p Value is #{value}
+                    when 1
+                        p Value is #{value}
+                    when 2
+                    when 3
+                        p Value is repeated
+                    when 5
+                        - break
+                    default
+                        p Value is #{value}
+            2. Block Expresion
+                -var friends = 1
+                case friends
+                    when 0: p you have no friends
+                    when 1: p you have a friend
+                    default: p you have #{friends} friends
+
+e. Working With Code
+    1. working with unbuffered code
+        - any code starts with '-'
+        Example-
+        1. Non-block Code
+            - for(let i =0; i<10; i++)
+            li item
+        2. Block Code   
+            - 
+                var list = ['Home', 'Services', 'About']
+                each item in list
+                    li item
+    2. working with unbuffered code
+        - any code starts with '=', directly evalautes the expression
+        Example-
+            p
+              = 'This code is <escaped>'
+            p= 'This code is <escaped>'
+            p(style="background: blue")= 'A message with a ' + 'blue' + ' background'
+    3. working with unescaped buffered code
+        -  starts with !=. It evaluates the JavaScript expression and outputs the result. 
+        Unescaped buffered code does not perform any escaping, so is unsafe for user input.
+        Example-
+            p
+                != 'This code is <strong>not</strong> escaped!'
+            p!= 'This code is <strong>not</strong> escaped!'
+
+f. Working With Comments
+    1. //       --> buffered comment single line(appreance on html code)
+    2. //-      --> unbuffered comment single line(unappreance on html code)
+    3. //-      --> block comment 
+        //
+    4. doctype html comment                 --> conditional comments
+        <!--[if IE 8]>
+        <html lang="en" class="lt-ie9">
+        <![endif]-->
+        <!--[if gt IE 8]><!-->
+        <html lang="en">
+        <!--<![endif]-->
+
+g. Working With Conditionals
+    1. working with if/else 
+        Example-
+            - var user = {description: 'foo bar baz'}
+            - var authorised = false
+            #user
+            if user.description
+                h2.green Description
+                p.description= user.description
+            else if authorised
+                h2.blue Description
+                p.description.
+                User has no description,
+                why not add one...
+            else
+                h2.red Description
+                p.description User has no description
+    2. working with 'unless' negation of if
+        Example-
+            unless user.isAnonymous
+                p You're logged in as #{user.name}
+
+h. Working With Interpolation
+    1. working with escaped string interpolation
+        Example-    
+            - var title = 'Page Title'
+            p #{title}
+    2. working with unescaped string interpolation
+        Example-
+            - var riskyBusiness = "<em>Some of the girls are wearing my mother's clothing.</em>";
+            div.quote
+                p Joel: !{riskyBusiness}
+    3. working with tag interpolation
+        Example-
+            p.
+                This is a very long and boring paragraph that spans multiple lines.
+                Suddenly there is a #[strong strongly worded phrase] that cannot be
+                #[em ignored].
+            p.
+                And here's an example of an interpolated tag with an attribute:
+                #[q(lang="es") ¡Hola Mundo!]
+    4. working with whitespace interpolation
+        - The tag interpolation syntax is especially useful for inline tags, where whitespace 
+        before and after the tag is significant. By default, however, Pug removes 
+        all spaces before and after tag.
+        Example-
+            p
+                | If I don't write the paragraph with tag interpolation, tags like
+                strong strong
+                | and
+                em em
+                | might produce unexpected results.
+            p.
+                If I do, whitespace is #[strong respected] and #[em everybody] is happy.
+
+i. Working With Iterator/Loops
+    - Pug supports two types of iteration: each and while
+    Example-
+        1. 'each' Loop
+            
+            ul
+                each val, index in ['zero', 'one', 'two']
+                    li= index + ': ' + val
+
+            - var values = [];
+            ul
+            each val in values
+                li= val
+            else
+                li There are no values
+        
+        2. 'while' Loop
+
+                - var n = 0;
+                ul
+                while n < 4
+                    li= n++
+
+j. Working With Mixins
+    - In Pug, mixins allows to create resuable blocks.
+    1. mixins as simple block
+        //- declaration
+        mixin list
+            ul 
+                li Item-1
+                li Item-2
+        //- use
+        +li
+        +li
+    2. mixin as complied to function with arguments
+        mixin petName(name)
+            li.petName= name
+        ul
+            +petName('cat')
+            +petName('dog')
+            +petName('pig')
+    3. mixin as block of Pug as content
+        mixin article(title)
+            .article
+                .article-wrapper
+                h1= title
+                if block
+                    block
+                else
+                    p No content provided
+
+        +article('Hello world')
+
+        +article('Hello world')
+            p This is my
+            p Amazing article
+    4. mixin with default arguments value
+        //- Declaration
+        mixin article(title='Default Title')
+            .article
+                .article-wrapper
+                h1= title
+
+        //- Use
+        +article()
+
+        +article('Hello world')
+
+    5. mixin with rest arguments
+        mixin list(id, ...items)
+            ul(id=id)
+                each item in items
+                li= item
+
+        +list('my-list', 1, 2, 3, 4)
+
+k. Working With Plain Text
+    1. working with inline in a tag
+        - easiest way to add a plain text using inline.
+        Example-
+            p This is plain old <em>text</em> content.
+    2. working with literal html
+        - Whole lines are also treated as plain text when they begin with a left 
+        angle bracket (<), which may occasionally be useful for writing 
+        literal HTML tags in places that could otherwise be inconvenient.
+        Example-
+            <html>
+            body
+                p Indenting the body tag here would make no difference.
+                p HTML itself isn't whitespace-sensitive.
+            </html>
+    3. working with piped text
+        - Another way to add plain text to templates is to prefix a line with a 
+        pipe character (|). This method is useful for mixing plain text
+        with inline tags.
+        Example-
+            p
+                | The pipe always goes at the beginning of its own line,
+                | not counting indentation.
+    4. working with block in a tag
+        - when wanted large block of text within a tag say - js code or css code
+        writing in script or style tags. To a block tag use dot(.) after the 
+        tag name.
+        Example-
+            script.
+                if (usingPug)
+                    console.log('you are awesome')
+                else
+                    console.log('use pug')
+
+l. Working With tags
+    1. Block Expansion- On Nested Tags
+        - to safe space Pugs provides inline syntax for nested tags.
+        Example-
+            a: img
+    2. Self Closing Tags
+        - Tags such as img, meta, and link are automatically self-closing 
+        (unless you use the XML doctype).Can also explicitly self close 
+        a tag by appending the /
+        Example-
+            foo/
+            foo(bar='baz')/
+
+m. Working With Inclusion - 'include'
+    - Pugs supports different files inclusion to provide the features of resuablity
+    of cotent.
+    Example-
+        //- index.pug
+        doctype html
+        html
+            include includes/head.pug
+            body
+                h1 My Site
+                p Welcome to my super lame site.
+                include includes/foot.pug
+
+        //- includes/head.pug
+        head
+        title My Site
+        script(src='/javascripts/jquery.js')
+        script(src='/javascripts/app.js')
+
+        //- includes/foot.pug
+        footer#footer
+            p Copyright (c) foobar
+
+    1. Inclusion Of Plain Text
+        Example-
+            //- index.pug
+            doctype html
+            html
+            head
+                style
+                include style.css
+            body
+                h1 My Site
+                p Welcome to my super lame site.
+                script
+                include script.js
+
+            /* style.css */
+            h1 {
+                color: red;
+            }
+
+            // script.js
+            console.log('You are awesome');
+
+    2. Inclusion Of Filtered Text
+        Example-
+            //- index.pug
+            doctype html
+            html
+                head
+                    title An Article
+                body
+                    include:markdown-it article.md
+            
+            # article.md
+            This is an article written in markdown.
+
+n. Working With Template Inheritance - block and extends keywords
+    - Pug supports template inheritance. Template inheritance works via the 
+    block and extends keywords. Template inheritance basically means
+    passing some block of code to child templates to inherits.
+
+    In a template, a block is simply a “block” of Pug that a child template may replace. 
+    This process is recursive. Pug blocks can provide default content.
+    Example-
+        //- layout.pug
+        html
+            head
+                title My Site - #{title}
+                block scripts
+                script(src='/jquery.js')
+            body
+                block content
+                block foot
+                #footer
+                    p some footer content
+
+    To extend this layout, create a new file and use the 'extends' directive with a 
+    path to the parent template. (If no file extension is given, .pug is automatically
+    appended to the file name.) Then, define one or more blocks to override
+    the parent block content.
+            //- page-a.pug
+            extends layout.pug
+
+            block scripts
+                script(src='/jquery.js')
+                script(src='/pets.js')
+
+            block content
+                h1= title
+                - var pets = ['cat', 'dog']
+                each petName in pets
+                    include pet.pug
+
+            //- pet.pug
+            p= petName
+
+    Now, Pug allows you to replace (default), prepend, or append blocks.
+
+    Suppose you have default scripts in a head block that you wish to use on 
+    every page. You might do this:
+        //- layout.pug
+        html
+        head
+            block head
+            script(src='/vendor/jquery.js')
+            script(src='/vendor/caustic.js')
+        body
+            block content
+
+        //- page.pug
+        extends layout.pug
+
+        block append head
+            script(src='/vendor/three.js')
+            script(src='/game.js')
+
+    When using block append or block prepend, the word “block” is optional:
+        //- page.pug
+        extends layout
+
+        append head
+            script(src='/vendor/three.js')
+            script(src='/game.js')
+
+
+
+
+        
