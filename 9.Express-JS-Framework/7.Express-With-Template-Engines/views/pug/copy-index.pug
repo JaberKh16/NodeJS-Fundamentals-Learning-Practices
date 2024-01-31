@@ -1,0 +1,75 @@
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
+        rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" 
+        crossorigin="anonymous")
+        title #{title}
+    body 
+        header 
+            nav.navbar.navbar-expand-lg.navbar-light.bg-light
+                div.container-fluid
+                    a.navbar-brand(href="#") Navbar
+                    button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
+                        span.navbar-toggler-icon
+                    
+                    div.collapse.navbar-collapse(id="navbarSupportedContent")
+                        ul.navbar-nav.me-auto.mb-2.mb-lg-0
+                            li.nav-item
+                                a.nav-link.active(aria-current="page" href="#") Home
+                            li.nav-item
+                                a.nav-link(href="#") About us
+                            li.nav-item.dropdown
+                                a.nav-link.dropdown-toggle(href="#" id="navbarDropdown" role="button" 
+                                data-bs-toggle="dropdown" aria-expanded="false") Services
+                                ul.dropdown-menu(aria-labelledby="navbarDropdown")
+                                    li
+                                        a.dropdown-item(href="#") Sell Courses
+                                    li
+                                        a.dropdown-item(href="#") Audit Courses
+                                    li
+                                        hr.dropdown-divider
+                                    li
+                                        a.dropdown-item(href="#") Paid Courese
+                            
+                    form.d-flex
+                        input.form-control.me-2(type="search" placeholder="Search" aria-label="Search")
+                        button.btn.btn-outline-success(type="submit") Search
+        main.hero-section
+            //- div.banner
+            //-     h1 Your Hero Section Title
+            //-     p Your hero section subheading or tagline goes here.
+            //-     a.cta-button(href="#cta-button") Call to Action
+            //- Carousel Component
+            div.carousel.slide(id="carouselExampleIndicators" data-bs-ride="carousel")
+                div.carousel-indicators
+                    button.active(type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" 
+                    aria-current="true" aria-label="Slide 1")
+                    button(type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" 
+                    aria-label="Slide 2")
+                    button(type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" 
+                    aria-label="Slide 3")
+
+                div.carousel-inner
+                    div.carousel-item.active
+                        img.w-100(src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7VZNU4NX3HYv4csF7W8WGu1oogo-71hjYTg&usqp=CAU"  alt="Iron Man")
+                    div.carousel-item
+                        img.w-100(src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNqdFxDKgTXnOCJ6QhXRa4IcYFncPBxdf2OA&usqp=CAU"  alt="Ghost Rider")
+                    div.carousel-item
+                        img.w-100(src="data:image/jpeg;base64,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"  alt="Loki")
+                button.carousel-control-prev(type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev")
+                    span.carousel-control-prev-icon(aria-hidden="true")
+                    span.visually-hidden Previous
+                </button>
+                button.carousel-control-next(type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next")
+                    span.carousel-control-next-icon(aria-hidden="true")
+                    span.visually-hidden Next
+                
+        
+    
+
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" 
+    crossorigin="anonymous")
