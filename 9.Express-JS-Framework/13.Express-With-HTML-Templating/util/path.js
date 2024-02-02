@@ -9,6 +9,7 @@
 const path = require('path');
 
 // const filePath = path.dirname(process.mainModule.filename);
-const filePath = path.join(__dirname);
+const filePath = path.join(__dirname, '../', 'public');
 
+console.log(filePath);
 module.exports = filePath;

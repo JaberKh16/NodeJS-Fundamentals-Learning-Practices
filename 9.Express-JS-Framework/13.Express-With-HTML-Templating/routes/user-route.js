@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-restricted-globals */
 const express = require('express');
@@ -8,7 +9,7 @@ const router = express.Router();
 const users = require('../data/users-data');
 
 // setup bodyparser middle
-// router.use(bodyParser.urlencoded({ extended: true }));
+router.use(express.urlencoded({ extended: false }));
 
 // get all users
 router.get('/getuser', (request, response) => {
@@ -32,17 +33,74 @@ router.get('/getuser/:userId', (request, response) => {
 });
 
 // add users
-router.get('/addusers/:id', (request, response) => {
-    const requestBody = request.body;
-    const requestParams = request.params;
-    // console.log(request.body);
-    if (!requestBody) {
+router.post('/addusers', (request, response) => {
+    const { userName, displayName, password } = request.body;
+    console.log(request.body);
+
+    if (!userName || !displayName || !password) {
         return response
             .status(400)
-            .send({ success: true, data: [{ body: requestBody, params: requestParams }] });
+            .send({ success: false, error: 'userName and displayName are required' });
+    }
+
+    const newUsers = {
+        id: users.usersInfo[users.usersInfo.length - 1].id + 1,
+        userName,
+        displayName,
+        password,
+    };
+
+    users.usersInfo.push(newUsers);
+
+    return response
+        .status(200)
+        .send({ success: true, data: { body: request.body, users: users.usersInfo } });
+});
+
+router.patch('/updateuser/:id', (req, response) => {
+    const {
+        body,
+        params: { id },
+    } = req;
+    console.log(req.body);
+    const parsedId = Number(id);
+    console.log(id);
+    if (isNaN(parsedId)) {
+        return response.status(400).send({ success: false, message: 'Bad Request' });
+    }
+    const findUserIndex = users.usersInfo.findIndex((user) => user.id === parsedId);
+    console.log(findUserIndex);
+    if (findUserIndex === -1) {
+        return response.status(200).send({ success: true, message: 'User not found' });
+    }
+    users.usersInfo[findUserIndex] = {
+        ...users.usersInfo[findUserIndex],
+        ...body,
+    };
+    return response
+        .status(200)
+        .send({ success: true, message: 'User record udapted', data: users.usersInfo });
+});
+
+router.delete('/deleteuser/:id', (request, response) => {
+    const { params } = request;
+    const { id } = params;
+    const parsedId = Number(id);
+    if (isNaN(parsedId)) {
+        return response.status(400).send({ success: false, message: 'Bad Request' });
+    }
+    const findUserIndex = users.usersInfo.findIndex((user) => user.id === parsedId);
+    if (findUserIndex === -1) {
+        return response.status(200).send({ success: true, message: 'User not found' });
+    }
+    users.usersInfo.splice(findUserIndex, 1);
+    if (users.usersInfo.length < 0) {
+        return response
+            .status(201)
+            .send({ success: true, message: 'No more record to delete', data: users.usersInfo });
     }
     return response
         .status(200)
-        .send({ success: true, data: [{ body: requestBody, params: requestParams }] });
+        .send({ success: true, message: 'User record deleted', data: users.usersInfo });
 });
 module.exports = router;

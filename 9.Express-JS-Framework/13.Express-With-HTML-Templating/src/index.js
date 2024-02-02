@@ -7,7 +7,7 @@ const rootDir = require('../util/path');
 const app = express();
 
 // Use the static middleware to serve files from the 'public' directory
-app.use(express.static(path.join(__dirname, '../', 'public')));
+app.use(express.static(rootDir));
 
 // Setup route
 app.use(userRoutes);
@@ -27,7 +27,7 @@ app.post('/api/users', (req, res) => {
     // };
     // users.push(newUsers);
     // send the updated users array in the response
-    return res.status(201).send('');
+    return res.status(201).send(body);
 });
 
 // Use the correct path in the 404 handler
