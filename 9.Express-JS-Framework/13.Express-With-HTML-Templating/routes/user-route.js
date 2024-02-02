@@ -3,10 +3,11 @@
 /* eslint-disable no-restricted-globals */
 const express = require('express');
 const { bodyParser } = require('body-parser');
-const { body, validationResult } = require('express-validator');
+const { validationResult } = require('express-validator');
 
 const router = express.Router();
 const users = require('../data/users-data');
+const validationSchema = require('../validation-schema/user-data-validation');
 
 // setup bodyparser middle
 router.use(express.urlencoded({ extended: false }));
@@ -33,14 +34,16 @@ router.get('/getuser/:userId', (request, response) => {
 });
 
 // add users
-router.post('/addusers', (request, response) => {
+router.post('/addusers', validationSchema.createUserValiationSchema, (request, response) => {
     const { userName, displayName, password } = request.body;
     console.log(request.body);
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+        return response.status(400).json({ errors: errors.array() });
+    }
 
     if (!userName || !displayName || !password) {
-        return response
-            .status(400)
-            .send({ success: false, error: 'userName and displayName are required' });
+        return response.status(400).send({ success: false, error: 'fields are required' });
     }
 
     const newUsers = {
@@ -57,12 +60,16 @@ router.post('/addusers', (request, response) => {
         .send({ success: true, data: { body: request.body, users: users.usersInfo } });
 });
 
-router.patch('/updateuser/:id', (req, response) => {
+router.patch('/updateuser/:id', validationSchema.createUserValiationSchema, (request, response) => {
+    const errors = validationResult(request);
+    if (!errors.isEmpty()) {
+        return response.status(400).json({ errors: errors.array() });
+    }
     const {
         body,
         params: { id },
-    } = req;
-    console.log(req.body);
+    } = request;
+    console.log(request.body);
     const parsedId = Number(id);
     console.log(id);
     if (isNaN(parsedId)) {

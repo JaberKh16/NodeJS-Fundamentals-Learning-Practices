@@ -12,3 +12,17 @@ d. Some Built-in Modules In Node
     6. events
 e. Event Loops, Async Pattern, Event Emitter, Streams
 f. Scaffolding Concepts
+
+NodeJS Frameworks Concepts
+--------------------------
+a. Express Concepts To Cover
+
+	1. Express Request, Response object
+	2. Express Routes Params, Query Params
+    3. Static Middleware Setup
+	4. HTML Templating
+    5. Template Engines - Pug, EJS
+	6. Express MVC Pattern
+	7. Express HTTP Methods - GET, POST, PATCH, PUT, DELETE
+	8. Express Form Submission 
+    9. Express With SQL - MySQL and PostgreSQL

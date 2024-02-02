@@ -9,6 +9,9 @@ const app = express();
 // Use the static middleware to serve files from the 'public' directory
 app.use(express.static(rootDir));
 
+// to get json
+app.use(express.json());
+
 // Setup route
 app.use(userRoutes);
 
