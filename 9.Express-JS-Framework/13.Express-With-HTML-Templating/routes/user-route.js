@@ -63,7 +63,7 @@ router.post('/addusers', validationSchema.createUserValiationSchema, (request, r
 router.patch('/updateuser/:id', validationSchema.createUserValiationSchema, (request, response) => {
     const errors = validationResult(request);
     if (!errors.isEmpty()) {
-        return response.status(400).json({ errors: errors.array() });
+        return response.status(400).json({ success: false, errors: errors.array() });
     }
     const {
         body,
@@ -88,6 +88,36 @@ router.patch('/updateuser/:id', validationSchema.createUserValiationSchema, (req
         .status(200)
         .send({ success: true, message: 'User record udapted', data: users.usersInfo });
 });
+
+router.put(
+    '/updateuserall/:id',
+    validationSchema.createUserValiationSchema,
+    (request, response) => {
+        const errors = validationResult(request);
+        if (!errors.isEmpty()) {
+            return response.status(400).json({ success: false, errors: errors.array() });
+        }
+        const {
+            body,
+            params: { id },
+        } = request;
+        const parsedId = Number(id);
+        if (isNaN(parsedId)) {
+            return response.status(400).send({ success: false, message: 'Bad Request' });
+        }
+        const findUserIndex = users.usersInfo.findIndex((user) => user.id === parsedId);
+        if (findUserIndex === -1) {
+            return response.status(200).send({ success: true, message: 'User not found' });
+        }
+        users.usersInfo[findUserIndex] = {
+            ...users.usersInfo[findUserIndex],
+            ...body,
+        };
+        return response
+            .status(200)
+            .send({ success: true, message: 'User record udapted', data: users.usersInfo });
+    }
+);
 
 router.delete('/deleteuser/:id', (request, response) => {
     const { params } = request;
