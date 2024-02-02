@@ -18,18 +18,6 @@ app.get('/', (request, response) => {
     return response.sendFile(filePath);
 });
 
-app.post('/api/users', (req, res) => {
-    console.log(req.body);
-    const { body } = req.body;
-    // const newUsers = {
-    //     id: users[users.length - 1].id + 1, // set the id of the user
-    //     ...body, // body has the request body response
-    // };
-    // users.push(newUsers);
-    // send the updated users array in the response
-    return res.status(201).send(body);
-});
-
 // Use the correct path in the 404 handler
 app.use((request, response, next) => {
     const filePath = path.join(__dirname, '../', 'views/', '404.html');
