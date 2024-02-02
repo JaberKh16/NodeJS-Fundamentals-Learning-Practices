@@ -54,10 +54,11 @@ app.get('/api/users/:id', (req, res) => {
 // post request - setup request body with new item {}
 app.post('/api/users', (req, res) => {
     console.log(req.body);
-    const { body } = req.body;
+    const { userName, displayName } = req.body;
+    console.log(userName);
     const newUsers = {
-        id: users[users.length - 1].id + 1, // set the id of the user
-        ...body, // body has the request body response
+        id: users.usersInfo[users.usersInfo.length - 1].id + 1, // set the id of the user
+        ...req.body, // body has the request body response
     };
     users.push(newUsers);
     // send the updated users array in the response
@@ -76,7 +77,7 @@ app.put('/api/users/:id', (req, res) => {
         return res.sendStatus(400);
     }
 
-    const findUserIndex = users.findIndex((user) => user.params.id === parsedId);
+    const findUserIndex = users.usersInfo.findIndex((user) => user.id === parsedId);
 
     if (findUserIndex === -1) {
         return res.sendStatus(404);
@@ -108,7 +109,7 @@ app.patch('/api/users/:id', (req, res) => {
         return res.sendStatus(404);
     }
     users.usersInfo[findUserIndex] = {
-        ...users[findUserIndex],
+        ...users.usersInfo[findUserIndex],
         ...body,
     };
     return res.status(200).send(users);
