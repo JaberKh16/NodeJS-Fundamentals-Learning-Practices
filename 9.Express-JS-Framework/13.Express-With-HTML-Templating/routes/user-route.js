@@ -1,3 +1,4 @@
+/* eslint-disable comma-dangle */
 /* eslint-disable no-shadow */
 /* eslint-disable arrow-body-style */
 /* eslint-disable no-restricted-globals */
@@ -9,7 +10,7 @@ const router = express.Router();
 const users = require('../data/users-data');
 const validationSchema = require('../validation-schema/user-data-validation');
 
-// setup bodyparser middle
+// setup urlencoded middle when getting body stream data
 router.use(express.urlencoded({ extended: false }));
 
 // get all users
@@ -34,7 +35,7 @@ router.get('/getuser/:userId', (request, response) => {
 });
 
 // add users
-router.post('/addusers', validationSchema.createUserValiationSchema, (request, response) => {
+router.post('/addusers', validationSchema.createUserValidationSchema(), (request, response) => {
     const { userName, displayName, password } = request.body;
     console.log(request.body);
     const errors = validationResult(request);
@@ -60,38 +61,42 @@ router.post('/addusers', validationSchema.createUserValiationSchema, (request, r
         .send({ success: true, data: { body: request.body, users: users.usersInfo } });
 });
 
-router.patch('/updateuser/:id', validationSchema.createUserValiationSchema, (request, response) => {
-    const errors = validationResult(request);
-    if (!errors.isEmpty()) {
-        return response.status(400).json({ success: false, errors: errors.array() });
+router.patch(
+    '/updateuser/:id',
+    validationSchema.createUserValidationSchema(),
+    (request, response) => {
+        const errors = validationResult(request);
+        if (!errors.isEmpty()) {
+            return response.status(400).json({ success: false, errors: errors.array() });
+        }
+        const {
+            body,
+            params: { id },
+        } = request;
+        console.log(request.body);
+        const parsedId = Number(id);
+        console.log(id);
+        if (isNaN(parsedId)) {
+            return response.status(400).send({ success: false, message: 'Bad Request' });
+        }
+        const findUserIndex = users.usersInfo.findIndex((user) => user.id === parsedId);
+        console.log(findUserIndex);
+        if (findUserIndex === -1) {
+            return response.status(200).send({ success: true, message: 'User not found' });
+        }
+        users.usersInfo[findUserIndex] = {
+            ...users.usersInfo[findUserIndex],
+            ...body,
+        };
+        return response
+            .status(200)
+            .send({ success: true, message: 'User record udapted', data: users.usersInfo });
     }
-    const {
-        body,
-        params: { id },
-    } = request;
-    console.log(request.body);
-    const parsedId = Number(id);
-    console.log(id);
-    if (isNaN(parsedId)) {
-        return response.status(400).send({ success: false, message: 'Bad Request' });
-    }
-    const findUserIndex = users.usersInfo.findIndex((user) => user.id === parsedId);
-    console.log(findUserIndex);
-    if (findUserIndex === -1) {
-        return response.status(200).send({ success: true, message: 'User not found' });
-    }
-    users.usersInfo[findUserIndex] = {
-        ...users.usersInfo[findUserIndex],
-        ...body,
-    };
-    return response
-        .status(200)
-        .send({ success: true, message: 'User record udapted', data: users.usersInfo });
-});
+);
 
 router.put(
     '/updateuserall/:id',
-    validationSchema.createUserValiationSchema,
+    validationSchema.createUserValidationSchema(),
     (request, response) => {
         const errors = validationResult(request);
         if (!errors.isEmpty()) {

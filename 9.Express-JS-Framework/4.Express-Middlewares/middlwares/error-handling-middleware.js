@@ -11,12 +11,27 @@
     and will fail to handle errors.
 
 */
-
+/* eslint-disable radix */
 const express = require('express');
 
 const app = express();
 
+// Middleware to simulate an error with a specific status code
+app.get('/simulate-error/:statusCode', (req, res, next) => {
+    const statusCode = parseInt(req.params.statusCode);
+    const error = new Error(`Simulated error with status code ${statusCode}`);
+    error.statusCode = statusCode;
+    next(error);
+});
+
+// Error handler middleware
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
+    const statusCode = err.statusCode || 500; // Default to 500 if status code is not set
+    res.status(statusCode).json({
+        success: false,
+        error: {
+            message: err.message || 'Internal Server Error',
+            statusCode,
+        },
+    });
 });

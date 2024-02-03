@@ -40,13 +40,19 @@
 /* eslint-disable consistent-return */
 /* eslint-disable prettier/prettier */
 const express = require('express');
+// third party middleware
+const morganLogger = require('morgan');
+const multer = require('multer');
 const users = require('../data/users-data');
 
 // creating instance of express
 const app = express();
 
-// middleware
+// built-in middleware
 app.use(express.json()); // getting json setup
+app.use(morganLogger('combined'));
+
+// application level middleware
 const loggingMiddleware = (reqeust, response, next) => {
     console.log(reqeust.method, reqeust.url);
     next();
@@ -117,10 +123,10 @@ app.post('/api/users', (req, res) => {
     console.log(req.body);
     const { body } = req.body;
     const newUsers = {
-        id: users[users.length - 1].id + 1,
+        id: users.usersInfo[users.length - 1].id + 1,
         ...body,
     };
-    users.push(newUsers);
+    users.usersInfo.push(newUsers);
     return res.status(201).send(newUsers);
 });
 
@@ -128,7 +134,7 @@ app.post('/api/users', (req, res) => {
 app.post('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
     const { body, findUserIndex } = req;
 
-    users[findUserIndex] = {
+    users.usersInfo[findUserIndex] = {
         id: findUserIndex,
         ...body,
     };
@@ -139,7 +145,7 @@ app.post('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
 app.patch('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
     const { body, findUserIndex } = req;
 
-    users[findUserIndex] = {
+    users.usersInfo[findUserIndex] = {
         ...users[findUserIndex],
         ...body,
     };
@@ -149,7 +155,7 @@ app.patch('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
 // delete request
 app.delete('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
     const { findUserIndex } = req;
-    users.splice(findUserIndex, 1);
+    users.usersInfo.splice(findUserIndex, 1);
     return res.sendStatus(200);
 });
 
