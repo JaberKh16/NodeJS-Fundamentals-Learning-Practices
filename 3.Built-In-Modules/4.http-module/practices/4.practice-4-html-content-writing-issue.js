@@ -14,6 +14,9 @@ const fs = require('fs');
 
 const server = http.createServer((request, response) => {
     fs.readFile('../html/index.html', (error, htmlContent) => {
+        if (error) {
+            return response.write(JSON.stringify({ msg: error, success: false }));
+        }
         response.writeHead(200, {
             'Content-Type': 'text/html',
         });

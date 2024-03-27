@@ -1,5 +1,10 @@
 Node Package Manager(NPM) Concepts
 ==================================
+NPM package manager is default package manager which comes with the NodeJS installation. NPM perform a serial installation
+process and install every single package individually.
+
+About security NPM also provides security through performs a security check on every installation.
+
 a. To check for the version
     $ npm --version
 

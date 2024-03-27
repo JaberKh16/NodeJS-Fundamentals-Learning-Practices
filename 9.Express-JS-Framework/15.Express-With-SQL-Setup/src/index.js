@@ -1,19 +1,22 @@
+/* eslint-disable import/named */
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
 // const productRoutes = require('../routes/product-routes');
 import express from 'express';
-import fetchedData from '../database-setup/db-config';
+import { errorHandler } from '../middlewares/error-handler';
+import { notesRoutes } from '../routes/notes-routes';
 
 const app = express();
 
-// setup product routes
-// app.use(productRoutes);
+// setup middleware
+app.use(express.json());
 
-app.get('/', (request, response) => {
-    const notes = fetchedData();
-    if (notes) {
-        return response.status(400).json({ success: true, notes });
-    }
-    return response.json({ failure: true, notes: [] });
-});
+// setup error handlers
+app.use(errorHandler);
+
+// setup notes route
+app.use(notesRoutes);
 
 // setup app environemnt
 const PORT = process.env.PORT || 3000;

@@ -1,0 +1,41 @@
+Yarn Package Manager(Yarn) Concepts
+====================================
+Yarn package manager is similar like NPM Package manager instead it provides more speed, consistency, stability and security.
+How, Yarn install package in parallel thus optimized to fetch and install multiple packages at once.
+
+Yarn checks behind the scenes to ensure you are not downloading any rogue scripts and other files that can conflict
+with your project's dependencies.
+
+Official Link For Yarn
+---------------------
+Link - [https://classic.yarnpkg.com/lang/en/docs/]
+
+Install Yarn
+------------
+$ npm install --global yarn    	# install yarn globally
+$ yarn --version 				# to check the version
+
+Working With Yarn
+-----------------
+a. Initialize package.json -
+	$ yarn init -y
+b. Add a package -
+	$ yarn add <package_name>
+	$ yarn add <package_name>@<version>
+c. Adding dependencies -
+	$ yarn add <package_name> --dev  		# dev dependencies
+	$ yarn add <package_name> --peer  		# peer dependencies
+	$ yarn add <package_name> --optinal  	# optional dependencies
+d. Upgrade a dependency -
+	$ yarn upgrade <package_name>			# upgrading individual package
+	$ yarn add <package_name>@<version>		# upgrading individual package with versioning
+e. Remove a package -
+	$ yarn remove <package_name>
+f. All dependencies installation at glance -
+	$ yarn
+	$ yarn install	
+g. To publish a package -
+	$ yarn publish 
+h. To run a script -
+	$ yarn run file
+	$ yarn run file -o --watch

@@ -3,6 +3,7 @@ const path = require('path'); // Require the 'path' module
 
 const userRoutes = require('../routes/user-route');
 const rootDir = require('../util/path');
+const errorHandler = require('../handlers/error-handlers');
 
 const app = express();
 
@@ -14,6 +15,8 @@ app.use(express.json());
 
 // Setup route
 app.use(userRoutes);
+// setup error handler
+app.use(errorHandler);
 
 // Correct the path in the following line
 app.get('/', (request, response) => {

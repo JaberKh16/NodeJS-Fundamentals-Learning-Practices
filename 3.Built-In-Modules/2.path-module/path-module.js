@@ -1,8 +1,7 @@
 /*
     NodeJS Module Concept - 'path' Module
     =====================================
-    NodeJS provides 'path' module to work with the path
-    related working in the system.
+    NodeJS provides 'path' module to work with the path related working in the system.
 
     'path' Module Properties
     ------------------------
