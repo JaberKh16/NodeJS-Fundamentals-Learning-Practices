@@ -1,18 +1,15 @@
 /*
     Stream With Fle Module
     ======================
-    Stream is a sequence of data that is being moved from one point to
-    another over time.
-    It work with data in chunks instead of waiting for the entire
-    data to be available at once which reduce extra memory usage
-    and extra time.
+    Stream is a sequence of data that is being moved from one point to another over time. It work with
+    data in chunks instead of waiting for the entire data to be available at once which reduce extra memory
+    usage and extra time.
 
     Example:
         a. Local- File transfered from local machine one drive to another.
         b. Remote- Streaming videos on any remote site.
 
-    Stream infact is built-in module in NodeJS that inherits form
-    the event emitter class.
+    Stream infact is built-in module in NodeJS that inherits form the event emitter class.
 
     Types Of Stream
     ---------------
