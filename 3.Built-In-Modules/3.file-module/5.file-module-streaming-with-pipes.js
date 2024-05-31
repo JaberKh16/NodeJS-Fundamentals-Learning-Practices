@@ -21,14 +21,17 @@
 
 const fs = require('fs');
 const path = require('path');
-const filePath = path.join(__dirname,'files', 'text-2.txt');
-const readableStream = fs.createReadStream(filePath,{
+const zlib = require('zlib'); // import zlib for gzip compression
+
+const filePath = path.join(__dirname, 'files', 'text-2.txt');
+const readableStream = fs.createReadStream(filePath, {
     encoding: 'utf8',
     highWaterMark: 2,  // to define reading 2 bytes of chunk
 });
 
-console.log(readableStream);
+// create a writable stream
 const destinationPath = path.resolve(__dirname, 'files', 'text-3.txt.gz');
-readableStream.pipe(writableStream).pipe(
-    fs.createWriteStream(destinationPath)
-);
+const writableStream = fs.createWriteStream(destinationPath);
+
+// pipe the readable stream to the writable stream
+readableStream.pipe(zlib.createGzip()).pipe(writableStream);

@@ -34,19 +34,32 @@ app.get('/api/users/:id', (req, res) => {
     }
     return res.send(findUser);
 });
+
 // setup query string
-app.get('/api/users/:id', (req, res) => {
-    const {
-        queryParams: { filter, value },
-    } = req;
-    console.log(req);
+// url - localhost:3000/api/users/filter?key1=value1&key2=value2
+app.get('/api/filter/user', (req, res) => {
     console.log(req.query);
+    const { filterCriteria, value } = req.query;
+
     // when query parameter is undefined
-    if (!filter && !value) {
+    if (!filterCriteria && !value) {
         return res.send(users);
     }
-    if (filter && value) {
-        return res.send(users.userInfo.filter((user) => user[filter].includes(value)));
+    if (filterCriteria && value) {
+        // filter users based on the filterCriteria and value
+        const filteredUsers = users.usersInfo.filter((user) => {
+            // check if the property exists and is a string or an array
+            const userProperty = user[filterCriteria];
+            if (typeof userProperty === 'string') {
+                return userProperty.includes(value);
+            }
+            if (Array.isArray(userProperty)) {
+                return userProperty.includes(value);
+            }
+            return false;
+        });
+
+        return res.send(filteredUsers);
     }
 });
 app.listen(PORT, () => {

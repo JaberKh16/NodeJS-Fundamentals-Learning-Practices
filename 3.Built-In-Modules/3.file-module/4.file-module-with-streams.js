@@ -29,27 +29,40 @@
 const fs = require('fs');
 const path = require('path');
 const filePath = path.join(__dirname,'files', 'text-2.txt');
+
+// setup readable stream
 const readableStream = fs.createReadStream(filePath,{
     encoding: 'utf8',
     highWaterMark: 2,  // to define reading 2 bytes of chunk
 });
 console.log(readableStream);
 
-const writefilePath = path.join(__dirname,'files', 'text-3.txt');
-const writableStream = fs.createWriteStream(writefilePath);
+// setup writable stream
+const destinationFilePath = path.join(__dirname,'files', 'text-3.txt');
+const writableStream = fs.createWriteStream(destinationFilePath);
 
-readableStream.on('data', (chunk)=>{
+// handle data events on the readable stream
+readableStream.on('data', (chunk) => {
     console.log(chunk);
-    
-    writableStream.on('finish', () => {
-        writableStream.write(chunk);
-        console.log('Write completed');
-    });
 
-    writableStream.on('error', (error) => {
-        console.error('Error writing to file:', error);
+    // write to the writable stream chunk-wise
+    writableStream.write(chunk, (error) => {
+        if (error) {
+            console.error('Error writing to file:', error);
+        } else {
+            console.log('Write completed');
+        }
     });
+});
 
-   
-})
+// handle error on writable stream
+writableStream.on('error', (error) => {
+    console.error('Error writing to file:', error);
+});
+
+// handle 'end' event on readable stream
+readableStream.on('end', () => {
+    // close the writable stream after all data has been written
+    writableStream.end();
+});
 

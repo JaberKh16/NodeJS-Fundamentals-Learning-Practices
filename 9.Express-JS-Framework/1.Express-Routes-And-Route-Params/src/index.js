@@ -170,6 +170,7 @@ app.get('/api/users/:id', (req, res) => {
     }
     return res.send(findUser);
 });
+
 app.listen(PORT, () => {
     console.log(`Server running on port:${PORT}`);
 });
