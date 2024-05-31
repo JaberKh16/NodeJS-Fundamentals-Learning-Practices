@@ -57,17 +57,25 @@ const loggingMiddleware = (reqeust, response, next) => {
     console.log(reqeust.method, reqeust.url);
     next();
 };
+
+// include loggingMiddleware as globally
 app.use(loggingMiddleware);
+
+// creating another middlware
 const resolvedUserIdMiddleware = (request, response, next) => {
     const {
-        params: { id },
-    } = request;
+        id,
+    } = request.params;
     const parsedId = parseInt(id);
+
     if (isNaN(parsedId)) {
         return response.sendStatus(400);
     }
-    const findUserIndex = users.userInfo.findIndex((user) => user.id === parsedId);
-    request.findUserIndex = findUserIndex; // passing via included in the request object
+    const findUserIndex = users.usersInfo.findIndex((user) => user.id === parsedId);
+    if (findUserIndex !== -1) {
+        request.findUserIndex = findUserIndex; // passing via included in the request object
+        request.parsedId = parsedId;
+    }
     return next();
 };
 
@@ -91,9 +99,9 @@ app.get('/api/users', (req, res) => {
 
 // route params
 app.get('/api/users/:id', (req, res) => {
-    const { params } = req.params;
-    console.log(params);
-    const parsedId = parseInt(params.id);
+    const { id } = req.params;
+
+    const parsedId = parseInt(id);
     if (isNaN(parsedId)) {
         return res.status(400).send({ message: 'Bad Request' });
     }
@@ -132,7 +140,6 @@ app.get('/api/filter/users', (req, res) => {
 // post request
 app.post('/api/users', (req, res) => {
     console.log(req.body);
-    const { body } = req.body;
     if (req.body.id) {
         const parsedId = parseInt(req.body.id);
         if (parsedId) {
@@ -141,10 +148,10 @@ app.post('/api/users', (req, res) => {
                 const newUsers = {
                     // eslint-disable-next-line max-len
                     id: users.usersInfo[users.usersInfo.length - 1].id + 1, // set the id of the user
-                    ...body, // body has the request body response
+                    ...req.body, // body has the request body response
                 };
                 console.log(users.usersInfo.length);
-                // users.usersInfo.push(newUsers);
+                users.usersInfo.push(newUsers);
                 // send the updated users array in the response
                 return res.status(201).send(newUsers);
             }
@@ -154,32 +161,31 @@ app.post('/api/users', (req, res) => {
 });
 
 // put request - full update
-app.put('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
-    const { body, findUserIndex } = req;
+app.put('/api/users/:id', resolvedUserIdMiddleware, (request, response) => {
+    const { body, findUserIndex, params: { id } } = request;
 
     users.usersInfo[findUserIndex] = {
-        id: findUserIndex,
+        id: parseInt(id),
         ...body,
     };
-    return res.sendStatus(200);
+    return response.status(200).send({ message: 'success' });
 });
 
 // patch request - partial update
-app.patch('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
-    const { body, findUserIndex } = req;
-
+app.patch('/api/users/:id', resolvedUserIdMiddleware, (request, response) => {
+    const { body, findUserIndex, params: { id } } = request;
     users.usersInfo[findUserIndex] = {
-        ...users[findUserIndex],
+        ...users.usersInfo[findUserIndex],
         ...body,
     };
-    return res.status(200).send(users);
+    return response.status(200).send(users);
 });
 
 // delete request
-app.delete('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
-    const { findUserIndex } = req;
+app.delete('/api/users/:id', resolvedUserIdMiddleware, (request, response) => {
+    const { findUserIndex } = request;
     users.usersInfo.splice(findUserIndex, 1);
-    return res.sendStatus(200);
+    return response.sendStatus(200);
 });
 
 // listen request
