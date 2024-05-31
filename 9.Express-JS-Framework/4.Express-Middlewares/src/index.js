@@ -49,7 +49,7 @@ const users = require('../data/users-data');
 const app = express();
 
 // built-in middleware
-app.use(express.json()); // getting json setup
+app.use(express.json()); // getting json setup to parse the parse request body
 app.use(morganLogger('combined'));
 
 // application level middleware
@@ -67,7 +67,7 @@ const resolvedUserIdMiddleware = (request, response, next) => {
         return response.sendStatus(400);
     }
     const findUserIndex = users.userInfo.findIndex((user) => user.id === parsedId);
-    request.findUserIndex = findUserIndex;
+    request.findUserIndex = findUserIndex; // passing via included in the request object
     return next();
 };
 
@@ -103,10 +103,11 @@ app.get('/api/users/:id', (req, res) => {
     }
     return res.send(findUser);
 });
+
 // setup query string
-app.get('/api/users/:id', (req, res) => {
+app.get('/api/filter/users', (req, res) => {
     const {
-        queryParams: { filter, value },
+        query: { filter, value },
     } = req;
     console.log(req.query);
     // when query parameter is undefined
@@ -114,7 +115,17 @@ app.get('/api/users/:id', (req, res) => {
         return res.send(users);
     }
     if (filter && value) {
-        return res.send(users.usersInfo.filter((user) => user[filter].includes(value)));
+        const filteredUser = users.usersInfo.filter((user) => {
+            const userProperty = user[filter];
+            if (typeof userProperty === 'string') {
+                return userProperty.includes(value);
+            }
+            if (Array.isArray(userProperty)) {
+                return userProperty.includes(value);
+            }
+            return false;
+        });
+        return res.send(filteredUser);
     }
 });
 
@@ -122,16 +133,28 @@ app.get('/api/users/:id', (req, res) => {
 app.post('/api/users', (req, res) => {
     console.log(req.body);
     const { body } = req.body;
-    const newUsers = {
-        id: users.usersInfo[users.length - 1].id + 1,
-        ...body,
-    };
-    users.usersInfo.push(newUsers);
-    return res.status(201).send(newUsers);
+    if (req.body.id) {
+        const parsedId = parseInt(req.body.id);
+        if (parsedId) {
+            const existedUser = users.usersInfo.find((user) => user.id === parsedId);
+            if (!existedUser) {
+                const newUsers = {
+                    // eslint-disable-next-line max-len
+                    id: users.usersInfo[users.usersInfo.length - 1].id + 1, // set the id of the user
+                    ...body, // body has the request body response
+                };
+                console.log(users.usersInfo.length);
+                // users.usersInfo.push(newUsers);
+                // send the updated users array in the response
+                return res.status(201).send(newUsers);
+            }
+            return res.status(200).send({ message: 'User id already existed.' });
+        }
+    }
 });
 
-// post request - full update
-app.post('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
+// put request - full update
+app.put('/api/users/:id', resolvedUserIdMiddleware, (req, res) => {
     const { body, findUserIndex } = req;
 
     users.usersInfo[findUserIndex] = {
