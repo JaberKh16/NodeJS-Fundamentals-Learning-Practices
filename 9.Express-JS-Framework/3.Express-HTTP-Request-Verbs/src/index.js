@@ -37,9 +37,9 @@ app.get('/api/users/:id', (req, res) => {
     return res.send(findUser);
 });
 // setup query string
-app.get('/api/users/:id', (req, res) => {
+app.get('/api/filter/users', (req, res) => {
     const {
-        queryParams: { filter, value },
+        query: { filter, value },
     } = req;
     console.log(req.query);
     // when query parameter is undefined
@@ -47,7 +47,17 @@ app.get('/api/users/:id', (req, res) => {
         return res.send(users);
     }
     if (filter && value) {
-        return res.send(users.userInfo.filter((user) => user[filter].includes(value)));
+        const filteredUser = users.usersInfo.filter((user) => {
+            const userProperty = user[filter];
+            if (typeof userProperty === 'string') {
+                return userProperty.includes(value);
+            }
+            if (Array.isArray(userProperty)) {
+                return userProperty.includes(value);
+            }
+            return false;
+        });
+        return res.send(filteredUser);
     }
 });
 
@@ -55,14 +65,25 @@ app.get('/api/users/:id', (req, res) => {
 app.post('/api/users', (req, res) => {
     console.log(req.body);
     const { userName, displayName } = req.body;
-    console.log(userName);
-    const newUsers = {
-        id: users.usersInfo[users.usersInfo.length - 1].id + 1, // set the id of the user
-        ...req.body, // body has the request body response
-    };
-    users.push(newUsers);
-    // send the updated users array in the response
-    return res.status(201).send(newUsers);
+
+    if (req.body.id) {
+        const parsedId = parseInt(req.body.id);
+        if (parsedId) {
+            const existedUser = users.usersInfo.find((user) => user.id === parsedId);
+            if (!existedUser) {
+                const newUsers = {
+                    // eslint-disable-next-line max-len
+                    id: users.usersInfo[users.usersInfo.length - 1].id + 1, // set the id of the user
+                    ...req.body, // body has the request body response
+                };
+                console.log(users.usersInfo.length);
+                // users.usersInfo.push(newUsers);
+                // send the updated users array in the response
+                return res.status(201).send(newUsers);
+            }
+            return res.status(200).send({ message: 'User id already existed.' });
+        }
+    }
 });
 
 // put request - full update
@@ -71,8 +92,8 @@ app.put('/api/users/:id', (req, res) => {
         body,
         params: { id },
     } = req;
-    const parsedId = parseInt(id);
 
+    const parsedId = parseInt(id);
     if (isNaN(parsedId)) {
         return res.sendStatus(400);
     }
