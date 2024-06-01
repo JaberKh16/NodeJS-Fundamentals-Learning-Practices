@@ -19,17 +19,24 @@
     Follow the link -
     [https://express-validator.github.io/docs/guides/getting-started]
 
+    Express validators can be defined using in the following way:
+        1. query('field').isString().isLength({ min: 3, max:10 }) // without [] when single validation
+        2. [ query('field').isString().isLength({ min: 3, max:10 })] // with [] when single or multiple validation
+    
+    Note: Express Validator validates the field but dont through any error unless its defined to through error.
 */
+
 /* eslint-disable quotes */
 /* eslint-disable radix */
 /* eslint-disable consistent-return */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-restricted-globals */
 /* eslint-disable array-callback-return */
-/* eslint-disable import/no-extraneous-dependencies */
-const express = require('express');
-const { query, validationResult } = require('express-validator');
-const users = require('../data/users-data');
+
+
+import express from 'express';
+import { query, validationResult } from 'express-validator';
+import users from '../data/users-data.js';
 
 // creating instance of express
 const app = express();
@@ -44,68 +51,90 @@ app.get('/api/users', (req, res) => {
 // route params
 // setup query string
 app.get(
-    '/api/users/',
-    query('filter').toString().toLowerCase(),
+    '/api/users/filter',
+    query('value').isString().toLowerCase(),
     (req, res) => {
-        const {
-            queryParams: { filter, value },
-        } = req;
+        const { filterCriteria, value } = req.query;
         console.log(req.query);
-        console.log(req); // can see express-validator info
-        if (filter && value) {
-            return res.send(
-                users.usersInfo.filter((user) => {
-                    user[filter].includes(value);
-                }),
-            );
+        if (filterCriteria && value) {
+            const filteredUsers = users.usersInfo.filter((user) => {
+                const userProperty = user[filterCriteria];
+                if(typeof userProperty === 'string'){
+                    return userProperty.includes(value);
+                }
+                if(Array.isArray(userProperty)){
+                    return userProperty.includes(value);
+                }
+                return false;
+            });
+            console.log(filteredUsers);
+            return res.send(filteredUsers);
+        } else {
+            return res.status(400).json({ error: 'Filter and value query parameters are required.' });
         }
     },
 );
 
 app.get(
     '/api/users-1/',
-    query('filter').toString().isLength({ min: 4, max: 10 }),
+    [ query('value').isString().isLength({ min: 1, max: 10 }).withMessage('must be a string')],
     (req, res) => {
-        const {
-            queryParams: { filter, value },
-        } = req;
+        
         // get the error info from express-validator middleware
-        const resultErr = validationResult(req);
-        console.log(resultErr);
-        console.log(req.query);
-        console.log(req); // can see express-validator info
-        if (filter && value) {
-            return res.send(
-                users.usersInfo.filter((user) => {
-                    user[filter].includes(value);
-                }),
-            );
+        const validationErr = validationResult(req);
+        console.log(validationErr);
+        if (!validationErr.isEmpty()) {
+            return res.status(400).json({ errors: validationErr.array() });
+        }
+
+        const {
+            filterCriteria, value
+        } = req.query;
+        // console.log(req['express-validator#contexts']); // can see express-validator info
+        if (filterCriteria && value) {
+            const filteredUsers = users.usersInfo.filter((user) => {
+                const userProperty = user[filterCriteria];
+                if(typeof userProperty === 'string'){
+                    return userProperty.includes(value);
+                }
+                if(Array.isArray(userProperty)){
+                    return userProperty.includes(value);
+                }
+                return false;
+            });
+            console.log(filteredUsers);
+            return res.send(filteredUsers);
+        }else{
+            return res.status(400).json({ error: 'Filter and value query parameters are required.' });
         }
     },
 );
 
 app.get(
     '/api/users-2/',
-    query('filter')
-        .toString()
+    [ query('value')
+        .isString()
         .withMessage('must be a string')
-        .isLength({ min: 4, max: 10 })
-        .withMessage('Length must 4-10 characters'),
+        .isLength({ min: 2, max: 10 })
+        .withMessage('Length must 2-10 characters')
+    ],
     (req, res) => {
         const {
-            queryParams: { filter, value },
+            query: { filterCriteria, value },
         } = req;
         // get the error info from express-validator middleware
-        const resultErr = validationResult(req);
-        console.log(resultErr);
-        console.log(req.query);
-        console.log(req); // can see express-validator info
-        if (filter && value) {
+        const validationErr = validationResult(req);
+        if (!validationErr.isEmpty()) {
+            return res.status(400).json({ errors: validationErr.array() });
+        }
+        if (filterCriteria && value) {
             return res.send(
                 users.usersInfo.filter((user) => {
-                    user[filter].includes(value);
+                    user[filterCriteria].includes(value);
                 }),
             );
+        }else{
+            return res.status(400).json({ error: 'Filter and value query parameters are required.' });
         }
     },
 );
