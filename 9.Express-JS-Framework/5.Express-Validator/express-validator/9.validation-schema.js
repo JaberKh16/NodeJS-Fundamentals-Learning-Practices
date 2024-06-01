@@ -29,14 +29,18 @@ const userSchema = () => {
                     min:2, 
                     max:10
                 },
-                errorMessage: "must be aleast 2-10 characters longs"
+                errorMessage: "must be aleast 2-10 characters long"
+            },
+            notEmpty:{
+                errorMessage: "must required field"
             }
         },
         password: {
             isLength: {
                 options: { min: 8 },
-                errorMessage: 'Password should be at least 8 chars',
-            },
-        },
-    };
+                errorMessage: 'Password should be at least 8 chars'
+            }
+        }
+        
+    }; 
 };
