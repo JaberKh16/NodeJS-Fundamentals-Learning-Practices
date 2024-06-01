@@ -34,9 +34,13 @@
 /* eslint-disable array-callback-return */
 
 
-import express from 'express';
-import { query, validationResult } from 'express-validator';
-import users from '../data/users-data.js';
+// import express from 'express';
+// import { query, validationResult } from 'express-validator';
+// import users from '../data/users-data.js';
+
+const express = require('express');
+const { query, validationResult } = require('express-validator');
+const {users} = require('../data/users-data');
 
 // creating instance of express
 const app = express();

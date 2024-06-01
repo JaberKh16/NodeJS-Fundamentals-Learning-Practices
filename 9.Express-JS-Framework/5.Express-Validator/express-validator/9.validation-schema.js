@@ -23,8 +23,14 @@
 const userSchema = () => {
     {
         username: {
-            errorMessage: 'Invalid username',
             isEmail: true,
+            isLength:{
+                options:{
+                    min:2, 
+                    max:10
+                },
+                errorMessage: "must be aleast 2-10 characters longs"
+            }
         },
         password: {
             isLength: {

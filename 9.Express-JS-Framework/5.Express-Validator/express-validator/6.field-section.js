@@ -24,7 +24,7 @@
             "name": "John McExpress",
             "addresses": {
                 "work": {
-                "country": "express-validator land"
+                    "country": "express-validator land"
                 }
             },
             "siblings": [{ "name": "Maria von Validator" }],
