@@ -50,6 +50,7 @@ app.get('/api/users', (req, res) => {
 
 // route params
 // setup query string
+// request demo: localhost:3000/api/users-1?filterCriteria=userName&value=a
 app.get(
     '/api/users/filter',
     query('value').isString().toLowerCase(),
@@ -75,6 +76,7 @@ app.get(
     },
 );
 
+// with single message setup
 app.get(
     '/api/users-1/',
     [ query('value').isString().isLength({ min: 1, max: 10 }).withMessage('must be a string')],
@@ -110,9 +112,12 @@ app.get(
     },
 );
 
+// with multiple message setup
 app.get(
     '/api/users-2/',
     [ query('value')
+        .notEmpty() // setup required field
+        .withMessage('must required field')
         .isString()
         .withMessage('must be a string')
         .isLength({ min: 2, max: 10 })
@@ -128,11 +133,18 @@ app.get(
             return res.status(400).json({ errors: validationErr.array() });
         }
         if (filterCriteria && value) {
-            return res.send(
-                users.usersInfo.filter((user) => {
-                    user[filterCriteria].includes(value);
-                }),
-            );
+            const filteredUsers = users.usersInfo.filter((user) => {
+                const userProperty = user[filterCriteria];
+                if(typeof userProperty === 'string'){
+                    return userProperty.includes(value);
+                }
+                if(Array.isArray(userProperty)){
+                    return userProperty.includes(value);
+                }
+                return false;
+            });
+            console.log(filteredUsers);
+            return res.send(filteredUsers);
         }else{
             return res.status(400).json({ error: 'Filter and value query parameters are required.' });
         }
