@@ -109,7 +109,7 @@ app.get(
     query('filter').toString().toLowerCase(),
     (req, res) => {
         const {
-            queryParams: { filter, value },
+            query: { filter, value },
         } = req;
         console.log(req.query);
         console.log(req); // can see express-validator info
@@ -128,7 +128,7 @@ app.get(
     query('filter').toString().isLength({ min: 4, max: 10 }),
     (req, res) => {
         const {
-            queryParams: { filter, value },
+            query: { filter, value },
         } = req;
         // get the error info from express-validator middleware
         const resultErr = validationResult(req);
@@ -154,7 +154,7 @@ app.get(
         .withMessage('Length must 4-10 characters'),
     (req, res) => {
         const {
-            queryParams: { filter, value },
+            query: { filter, value },
         } = req;
         // get the error info from express-validator middleware
         const resultErr = validationResult(req);

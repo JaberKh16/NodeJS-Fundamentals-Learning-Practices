@@ -16,7 +16,7 @@
         1. Each word-like sequence of characters is a 'segment' which are like
            properties of a javascript object.
         2. Fields nested under objects can be selected by separating two segments with dot(.)
-        3. Array indices can be selected by wrapping them in a square brackets.
+        3. Array indices can be selected by wrapping them in a square brackets [].
         4. Segments with special characters such as . can be selected by wrapping in
            square brackets and double quotes.
 
