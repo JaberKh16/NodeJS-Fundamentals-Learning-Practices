@@ -106,68 +106,33 @@ app.get('/api/users', (req, res) => {
 // setup query string
 app.get(
     '/api/users/',
-    query('filter').toString().toLowerCase(),
+    query('value').toString().toLowerCase(),
     (req, res) => {
         const {
-            query: { filter, value },
-        } = req;
+             filterCriteria, value,
+        } = req.query;
         console.log(req.query);
-        console.log(req); // can see express-validator info
-        if (filter && value) {
-            return res.send(
-                users.usersInfo.filter((user) => {
-                    user[filter].includes(value);
-                }),
-            );
-        }
-    },
-);
 
-app.get(
-    '/api/users-1/',
-    query('filter').toString().isLength({ min: 4, max: 10 }),
-    (req, res) => {
-        const {
-            query: { filter, value },
-        } = req;
-        // get the error info from express-validator middleware
-        const resultErr = validationResult(req);
-        console.log(resultErr);
-        console.log(req.query);
-        console.log(req); // can see express-validator info
-        if (filter && value) {
-            return res.send(
-                users.usersInfo.filter((user) => {
-                    user[filter].includes(value);
-                }),
-            );
+        // validation errors
+        const validationErrors = validationResult(req);
+        if (!validationErrors.isEmpty()) {
+            return res.status(400).json({ errors: validationErrors.array() });
         }
-    },
-);
 
-app.get(
-    '/api/users-2/',
-    query('filter')
-        .toString()
-        .withMessage('must be a string')
-        .isLength({ min: 4, max: 10 })
-        .withMessage('Length must 4-10 characters'),
-    (req, res) => {
-        const {
-            query: { filter, value },
-        } = req;
-        // get the error info from express-validator middleware
-        const resultErr = validationResult(req);
-        console.log(resultErr);
-        console.log(req.query);
-        console.log(req); // can see express-validator info
-        if (filter && value) {
-            return res.send(
-                users.usersInfo.filter((user) => {
-                    user[filter].includes(value);
-                }),
-            );
+        if (filterCriteria && value) {
+            const filteredUsers = users.usersInfo.filter((user) => {
+                const userProperty = user[filterCriteria];
+                if (typeof userProperty === 'string') {
+                    return userProperty.includes(value);
+                }
+                if (Array.isArray(userProperty)) {
+                    return userProperty.includes(value);
+                }
+                return false;
+            });
+            return res.status(200).send(filteredUsers);
         }
+        return res.status(400).json({ error: 'filter critera and value is required' });
     },
 );
 
