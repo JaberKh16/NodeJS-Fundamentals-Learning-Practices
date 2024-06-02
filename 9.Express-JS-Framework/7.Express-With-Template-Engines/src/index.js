@@ -125,24 +125,26 @@
 const express = require('express');
 const { query, validationResult } = require('express-validator');
 const path = require('path');
-const pugFilePathObj = require('../util/path-pug-resolver');
-const handlebarsFilePathObj = require('../util/path-handlebars-resolver');
-const ejsFilePathObj = require('../util/path-ejs-resolver');
 const users = require('../data/users-data');
 
-// Creating an instance of express
+// template engine files
+const ejsFilePathObj = require('../util/path-ejs-resolver');
+const pugFilePathObj = require('../util/path-pug-resolver');
+const handlebarsFilePathObj = require('../util/path-handlebars-resolver');
+
+// creating an instance of express
 const app = express();
 
-// Setup static pages
+// setup static pages
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Setup template engine - ejs
-app.set('views', pugFilePathObj.filePath);
-app.set('view engine', 'pug');
+// setup template engine - ejs
+// app.set('views', pugFilePathObj.filePath);
+// app.set('view engine', 'pug');
 
 // // Setup template engine - ejs
-// app.set('views', ejsFilePathObj.filePath);
-// app.set('view engine', 'ejs');
+app.set('views', ejsFilePathObj.filePath);
+app.set('view engine', 'ejs');
 
 // Setup port number
 const PORT = process.env.PORT || 3000;

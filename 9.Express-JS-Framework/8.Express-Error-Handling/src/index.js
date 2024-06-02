@@ -68,9 +68,9 @@
         app.get('/', (req, res, next) => {
             setTimeout(() => {
                 try {
-                throw new Error('BROKEN')
+                    throw new Error('BROKEN')
                 } catch (err) {
-                next(err)
+                    next(err)
                 }
             }, 100)
         }
@@ -110,47 +110,6 @@ app.get('/api/users', (req, res) => {
 // setup query string
 app.get(
     '/api/users/',
-    query('filter').toString().toLowerCase(),
-    (req, res) => {
-        const {
-            queryParams: { filter, value },
-        } = req;
-        console.log(req.query);
-        console.log(req); // can see express-validator info
-        if (filter && value) {
-            return res.send(
-                users.usersInfo.filter((user) => {
-                    user[filter].includes(value);
-                }),
-            );
-        }
-    },
-);
-
-app.get(
-    '/api/users-1/',
-    query('filter').toString().isLength({ min: 4, max: 10 }),
-    (req, res) => {
-        const {
-            queryParams: { filter, value },
-        } = req;
-        // get the error info from express-validator middleware
-        const resultErr = validationResult(req);
-        console.log(resultErr);
-        console.log(req.query);
-        console.log(req); // can see express-validator info
-        if (filter && value) {
-            return res.send(
-                users.usersInfo.filter((user) => {
-                    user[filter].includes(value);
-                }),
-            );
-        }
-    },
-);
-
-app.get(
-    '/api/users-2/',
     query('filter')
         .toString()
         .withMessage('must be a string')
@@ -158,19 +117,24 @@ app.get(
         .withMessage('Length must 4-10 characters'),
     (req, res) => {
         const {
-            queryParams: { filter, value },
+            filterCriteria, value,
         } = req;
         // get the error info from express-validator middleware
         const resultErr = validationResult(req);
         console.log(resultErr);
         console.log(req.query);
-        console.log(req); // can see express-validator info
-        if (filter && value) {
-            return res.send(
-                users.usersInfo.filter((user) => {
-                    user[filter].includes(value);
-                }),
-            );
+        if (filterCriteria && value) {
+            const filteredUser = users.usersInfo.filter((user) => {
+                const userProperty = user[filterCriteria];
+                if (typeof userProperty === 'string') {
+                    return userProperty.includes(value);
+                }
+                if (Array.isArray(userProperty)) {
+                    return userProperty.includes(value);
+                }
+                throw new Error('not found');
+            });
+            return res.status(200).send(filteredUser);
         }
     },
 );
