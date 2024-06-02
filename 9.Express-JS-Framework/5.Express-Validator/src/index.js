@@ -40,7 +40,7 @@
 
 const express = require('express');
 const { query, validationResult } = require('express-validator');
-const {users} = require('../data/users-data');
+const users = require('../data/users-data');
 
 // creating instance of express
 const app = express();
