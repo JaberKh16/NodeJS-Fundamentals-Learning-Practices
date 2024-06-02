@@ -125,9 +125,9 @@ app.get('/', (request, response) => {
         sessionId: request.sessionID,
     };
     console.log(sessionInfo);
-    // to modify session to be persistence
+    // to modify session id to be persistence
     request.session.visited = true;
-    // getting session history
+    // setup a session in the sessionStore
     request.sessionStore.get(request.sessionID, (error, sessionData) => {
         if (error) {
             console.log(error);

@@ -93,51 +93,18 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable import/no-extraneous-dependencies */
 const express = require('express');
-const { query, validationResult } = require('express-validator');
-const users = require('../data/users-data');
-
+const userRoutes = require('../routes/user.route');
 // creating instance of express
 const app = express();
+
+// setup body parser middleware
+app.use(express.json());
 
 // setup port number
 const PORT = process.env.PORT || 3000;
 
-app.get('/api/users', (req, res) => {
-    res.send({ users });
-});
-
-// route params
-// setup query string
-app.get(
-    '/api/users/',
-    query('filter')
-        .toString()
-        .withMessage('must be a string')
-        .isLength({ min: 4, max: 10 })
-        .withMessage('Length must 4-10 characters'),
-    (req, res) => {
-        const {
-            filterCriteria, value,
-        } = req;
-        // get the error info from express-validator middleware
-        const resultErr = validationResult(req);
-        console.log(resultErr);
-        console.log(req.query);
-        if (filterCriteria && value) {
-            const filteredUser = users.usersInfo.filter((user) => {
-                const userProperty = user[filterCriteria];
-                if (typeof userProperty === 'string') {
-                    return userProperty.includes(value);
-                }
-                if (Array.isArray(userProperty)) {
-                    return userProperty.includes(value);
-                }
-                throw new Error('not found');
-            });
-            return res.status(200).send(filteredUser);
-        }
-    },
-);
+// get the user routes
+app.use(userRoutes);
 
 // listen request
 app.listen(PORT, () => {
