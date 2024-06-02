@@ -1,33 +1,28 @@
-const userSchema = () => {
-    {
-        userName: {
-            isString: true,
-            isLength:{
-                options:{
-                    min:2, 
-                    max:10
-                },
-                errorMessage: "must be aleast 2-10 characters long"
-            },
-            notEmpty:{
-                errorMessage: "must required field"
-            }
+const userSchema = {
+    userName: {
+        isString: {
+            errorMessage: "must be a string"
         },
-        displayName: {
-            isLength: {
-                options: { min: 2, 10 },
-                errorMessage: 'must be aleast 2-10 characters long'
-            },
-            isString:{
-                errorMessage:"must be a string"
-            },
-            notEmpty:{
-                errorMessage:"must required field"
-            }
+        isLength: {
+            options: { min: 2, max: 10 },
+            errorMessage: "must be at least 2-10 characters long"
+        },
+        notEmpty: {
+            errorMessage: "must be a required field"
         }
-        
-    }; 
+    },
+    displayName: {
+        isString: {
+            errorMessage: "must be a string"
+        },
+        isLength: {
+            options: { min: 2, max: 10 },
+            errorMessage: "must be at least 2-10 characters long"
+        },
+        notEmpty: {
+            errorMessage: "must be a required field"
+        }
+    }
 };
 
-
-module.exports = userSchema;
+module.exports = { userSchema };

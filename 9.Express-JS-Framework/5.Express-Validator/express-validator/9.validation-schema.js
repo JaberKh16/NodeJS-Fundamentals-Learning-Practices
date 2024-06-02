@@ -20,8 +20,7 @@
 
 */
 
-const userSchema = () => {
-    {
+const userSchema = {
         username: {
             isEmail: true,
             isLength:{
@@ -42,7 +41,6 @@ const userSchema = () => {
             }
         }
         
-    }; 
 };
 
 

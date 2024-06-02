@@ -107,7 +107,7 @@ app.post(
 // custom sanitizers
 app.post(
     '/user/:id',
-    param('id').customSanitizer((value) => ObjectId(value)),
+    param('id').customSanitizer((value) => ObjectId(value) ),
     (req, res) => {
         // req.params.id is an ObjectId now
     },

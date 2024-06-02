@@ -1,6 +1,6 @@
 const express = require('express');
 const { validationResult, matchedData, checkSchema } = require('express-validator');
-const {users} = require('../data/users-data');
+const users = require('../data/users-data');
 const { userSchema }  = require('../src/validating-schema/userValSchema');
 
 // creating instance of express
@@ -14,7 +14,7 @@ app.get('/api/users', (req, res) => {
 });
 
 // use of validation schema
-app.post('/api/user-3', checkSchema(userSchema), (req, res) => {
+app.post('/api/users', checkSchema(userSchema), (req, res) => {
     const validationErrors = validationResult(req);
     if(!validationErrors.isEmpty()){
         return res.status(400).json({errors: validationErrors.array() });

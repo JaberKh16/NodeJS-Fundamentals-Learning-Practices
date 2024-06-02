@@ -6,4 +6,4 @@ users.usersInfo = [
     { id: 4, userName: 'niyal', displayName: 'Niyal' },
 ];
 
-export default users;
+module.exports = users;
