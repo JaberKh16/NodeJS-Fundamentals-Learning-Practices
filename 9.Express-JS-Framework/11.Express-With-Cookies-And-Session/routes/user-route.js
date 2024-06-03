@@ -1,7 +1,6 @@
 const express = require('express');
 
 const routes = express.Router();
-const { body } = require('express-validator');
 const users = require('../data/users-data');
 
 routes.get('/get-users', (request, response) => {

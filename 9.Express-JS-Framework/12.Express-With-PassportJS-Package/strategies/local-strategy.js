@@ -10,9 +10,11 @@
 
     From the above syntax,
         1. verify function:  takes (username, password, done)=>{}
-        2. options: takes an option {} to tell let's say username => {userNameField: 'email'}
+        2. options: takes an option {} to tell let's say username => {userNameField: 'email'} to
+        basically telling the strategy to take username value as 'email'.
 
 */
+/* eslint-disable-next-line max-len */
 /* eslint-disable prettier/prettier */
 const passport = require('passport');
 // importing Strategy Class
