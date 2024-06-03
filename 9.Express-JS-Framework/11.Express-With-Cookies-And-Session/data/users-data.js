@@ -1,24 +1,26 @@
 const users = {};
 
-// define users info
 users.usersInfo = [
     {
         id: 1,
         userName: 'adi',
         displayName: 'Adi',
-        password: '123456',
+        email: 'adi@gmail.com',
+        password: 'adi',
     },
     {
         id: 2,
         userName: 'mark',
         displayName: 'Mark',
-        password: '123456',
+        email: 'mark@gmail.com',
+        password: 'mark',
     },
     {
         id: 4,
         userName: 'niyal',
         displayName: 'Niyal',
-        password: '123456',
+        email: 'niyal@gmail.com',
+        password: 'niyal',
     },
 ];
 

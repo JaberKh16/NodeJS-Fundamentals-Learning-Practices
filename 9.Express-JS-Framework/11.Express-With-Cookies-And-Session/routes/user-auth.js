@@ -2,12 +2,13 @@
 const express = require('express');
 
 const { validationResult } = require('express-validator');
-const { userValidationSchema } = require('../validation-schema/user-auth-schema');
+const { checkSchema } = require('express-validator');
+const userValidationSchema = require('../validation-schema/user.auth.schema');
 const users = require('../data/users-data');
 
 const routes = express.Router(); // Change this line to use Router() instead of Route()
 
-routes.post('/auth/users', userValidationSchema, (request, response) => {
+routes.post('/auth/users', checkSchema(userValidationSchema), (request, response) => {
     const errors = validationResult(request);
     console.log(errors);
     // check if the errors object is empty
