@@ -8,17 +8,17 @@ const routes = express.Router();
 // setup json parser middlware
 routes.use(express.json());
 
-routes.get('/api/users', (req, res) => {
+routes.get('/users', (req, res) => {
     res.send({ users });
 });
 
-routes.get('/api/users/filter', checkSchema(userValidationSchema), (req, res) => {
+routes.get('/users/filter', checkSchema(userValidationSchema), (req, res) => {
     const { filterCriteria, value } = req.query;
 
     // get the error info from express-validator middleware
-    const resultErr = validationResult(req);
-    if (!resultErr.isEmpty()) {
-        return res.status(400).json({ errors: resultErr.array() });
+    const validationErrors0 = validationResult(req);
+    if (!validationErrors0.isEmpty()) {
+        return res.status(400).json({ errors: validationErrors0.array() });
     }
 
     // filter users based on criteria

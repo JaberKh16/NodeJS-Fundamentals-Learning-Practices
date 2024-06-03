@@ -103,8 +103,8 @@ app.use(express.json());
 // setup port number
 const PORT = process.env.PORT || 3000;
 
-// get the user routes
-app.use(userRoutes);
+// get the user routes with prefix '/api/'
+app.use('/api/', userRoutes);
 
 // listen request
 app.listen(PORT, () => {
