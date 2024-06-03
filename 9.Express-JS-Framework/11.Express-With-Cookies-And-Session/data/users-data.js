@@ -6,21 +6,21 @@ users.usersInfo = [
         userName: 'adi',
         displayName: 'Adi',
         email: 'adi@gmail.com',
-        password: 'adi',
+        password: 'adi11@@',
     },
     {
         id: 2,
         userName: 'mark',
         displayName: 'Mark',
         email: 'mark@gmail.com',
-        password: 'mark',
+        password: 'mark11@@',
     },
     {
         id: 4,
         userName: 'niyal',
         displayName: 'Niyal',
         email: 'niyal@gmail.com',
-        password: 'niyal',
+        password: 'niyal11@@',
     },
 ];
 

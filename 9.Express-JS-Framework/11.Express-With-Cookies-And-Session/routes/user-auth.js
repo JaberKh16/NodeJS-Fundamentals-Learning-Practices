@@ -11,20 +11,22 @@ routes.post('/auth/users', checkSchema(userValidationSchema), (request, response
     const errors = validationResult(request);
     console.log(errors);
     // check if the errors object is empty
-    if (errors.isEmpty()) {
+    if (!errors.isEmpty()) {
         return response.status(400).send({ msg: errors.array() });
     }
     // continue after validation passes
     const data = matchedData(request);
 
-    console.log(`UserEmail: ${data.email}, Password: ${data.spassword}`);
+    console.log(`UserEmail: ${data.email}, Password: ${data.password}`);
     const findUser = users.usersInfo.find((user) => user.email === data.email);
     if (!findUser || findUser.password !== data.password) {
         return response.status(401).send({ msg: 'Bad Credentials' });
     }
     // set dynamically session with user
-    request.session.user = findUser;
-    return response.status(200).send(findUser);
+    request.session.userData = findUser;
+    return response
+        .status(200)
+        .json({ message: 'User authenticated successfully.', data: findUser });
 });
 
 routes.get('/auth/status', (request, response) => {
@@ -36,7 +38,7 @@ routes.get('/auth/status', (request, response) => {
         console.log(data);
     });
     return request.session.user
-        ? response.status(200).send(request.session.user)
+        ? response.status(200).send(request.session.userData)
         : response.status(400).send({ msg: 'Unauthorized user' });
 });
 
