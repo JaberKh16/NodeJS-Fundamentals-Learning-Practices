@@ -1,8 +1,7 @@
 /* eslint-disable consistent-return */
 const express = require('express');
 
-const { validationResult } = require('express-validator');
-const { checkSchema } = require('express-validator');
+const { validationResult, matchedData, checkSchema } = require('express-validator');
 const userValidationSchema = require('../validation-schema/user.auth.schema');
 const users = require('../data/users-data');
 
@@ -16,12 +15,11 @@ routes.post('/auth/users', checkSchema(userValidationSchema), (request, response
         return response.status(400).send({ msg: errors.array() });
     }
     // continue after validation passes
-    const {
-        body: { userName, password },
-    } = request;
-    console.log(`Username: ${userName}, Password: ${password}`);
-    const findUser = users.usersInfo.find((user) => user.userName === userName);
-    if (!findUser || findUser.password !== password) {
+    const data = matchedData(request);
+
+    console.log(`UserEmail: ${data.email}, Password: ${data.spassword}`);
+    const findUser = users.usersInfo.find((user) => user.email === data.email);
+    if (!findUser || findUser.password !== data.password) {
         return response.status(401).send({ msg: 'Bad Credentials' });
     }
     // set dynamically session with user
