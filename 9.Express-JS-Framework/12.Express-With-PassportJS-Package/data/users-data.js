@@ -22,4 +22,4 @@ users.usersInfo = [
     },
 ];
 
-module.exports = users;
+export default users;

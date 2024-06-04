@@ -16,27 +16,28 @@
 */
 /* eslint-disable-next-line max-len */
 /* eslint-disable prettier/prettier */
-const passport = require('passport');
+import passport from 'passport';
 // importing Strategy Class
-const { Strategy } = require('passport-local');
-const users = require('../data/users-data');
+import { Strategy } from 'passport-local';
+
+// eslint-disable-next-line import/extensions
+import users from '../data/users-data.js';
 
 // setup a serialize
 passport.serializeUser((user, done) => {
-    console.log('Inside serilize user');
+    console.log('Inside serialize user');
     console.log(user);
     done(null, user.id);
 });
 
 // serializeUser() function user.id passed to deserilizeUser(id)
 passport.deserializeUser((id, done) => {
-    console.log('Inside deserilize user');
-    console.log(`Userid: ${id}`);
-    // unpacking the user via id
+    console.log('Inside deserialize user');
+    console.log(`UserId: ${id}`);
     try {
         const findUser = users.usersInfo.find((user) => user.id === id);
         if (!findUser) {
-           throw new Error(`User ${id} not found`);
+            throw new Error(`User ${id} not found`);
         }
         done(null, findUser);
     } catch (error) {

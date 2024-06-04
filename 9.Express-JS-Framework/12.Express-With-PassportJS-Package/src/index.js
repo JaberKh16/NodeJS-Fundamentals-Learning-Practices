@@ -5,12 +5,13 @@
 */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable prettier/prettier */
-const express = require('express');
+import cookieParser from 'cookie-parser';
+import express from 'express';
+import session from 'express-session';
 
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const passport = require('passport');
-const passportRoutes = require('../routes/passport-auth');
+import passport from 'passport';
+// eslint-disable-next-line import/extensions
+import passportRoutes from '../routes/passport-auth.js';
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use(
     }),
 );
 
+// passport setup needs to be attach after session setup
 // initialize passport
 app.use(passport.initialize());
 // setup passport session
@@ -42,7 +44,7 @@ app.get('/', (request, response) => {
         sessionObj: request.session,
         sessionId: request.sessionID,
     };
-    console.log(sessionInfo);
+    // console.log(sessionInfo);
     // to modify session to be persistence
     request.session.visited = true;
     // getting session history
