@@ -1,6 +1,10 @@
 /*
     Express With PassportJS Integration
     ====================================
+    To setup passport
+        - setup session middleware then initialized the passport
+            app.use(passport.initialize());
+            app.use(passport.session());
 
 */
 /* eslint-disable import/no-extraneous-dependencies */
