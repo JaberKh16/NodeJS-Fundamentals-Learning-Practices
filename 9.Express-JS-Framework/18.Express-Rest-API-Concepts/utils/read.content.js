@@ -1,5 +1,4 @@
 const fs = require('fs/promises');
-const path = require('path');
 
 // Resolve the file path
 // const filePath = path.resolve(__dirname, '../data', 'users.data.json');
