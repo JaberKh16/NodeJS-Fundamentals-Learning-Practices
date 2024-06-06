@@ -39,6 +39,7 @@ passport.deserializeUser((id, done) => {
         if (!findUser) {
             throw new Error(`User ${id} not found`);
         }
+        // done(err: any, user?:false) if user found then done(err:null, user?:findUser)
         done(null, findUser);
     } catch (error) {
         done(error, null);

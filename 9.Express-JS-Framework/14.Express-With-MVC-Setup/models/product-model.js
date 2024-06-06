@@ -1,16 +1,6 @@
 const products = [];
-const productModel = class Product {
-    constructor(title, type, price) {
-        this.title = title;
-        this.type = type;
-        this.price = price;
-    }
+const productModel = {};
 
-    saveProduct() {
-        products.push(this);
-    }
-
-    fetchProduct() {}
-};
+productModel.getProduct = () => {};
 
 module.exports = productModel;
