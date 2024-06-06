@@ -96,3 +96,4 @@
 ::1 - - [06/Jun/2024:14:04:58 +0000] "DELETE /api/users/delete/22 HTTP/1.1" 404 161 "-" "PostmanRuntime/7.36.3"
 ::1 - - [06/Jun/2024:14:05:01 +0000] "DELETE /api/users/delete/22 HTTP/1.1" 404 161 "-" "PostmanRuntime/7.36.3"
 ::1 - - [06/Jun/2024:14:05:26 +0000] "DELETE /api/users/delete/22 HTTP/1.1" 200 170 "-" "PostmanRuntime/7.36.3"
+::1 - - [06/Jun/2024:14:08:05 +0000] "DELETE /api/users/delete/22 HTTP/1.1" 200 170 "-" "PostmanRuntime/7.36.3"
