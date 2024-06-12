@@ -1,3 +1,4 @@
+/* eslint-disable function-paren-newline */
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable import/no-extraneous-dependencies */
 // const productRoutes = require('../routes/product-routes');
@@ -6,6 +7,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const connectDB = require('../database-setup/db.config');
 const contactRoutes = require('../routes/contact.routes');
+const urlRoutes = require('../routes/url.routes');
 
 // connect to the database
 const dataConnect = async () => {
@@ -22,6 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // setup product routes
 app.use(contactRoutes);
+app.use('/url', urlRoutes);
 
 app.get('/', (request, response) =>
     // const notes = fetchedData();

@@ -56,7 +56,7 @@ contactController.deletedContact = async (req, res) => {
         if (!deletedContact) {
             return res.status(404).json({ message: 'Contact not found' });
         }
-        return res.json({ message: 'Contact deleted successfully' });
+        return res.json({ message: 'Contact deleted successfully', data: deletedContact });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
