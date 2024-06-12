@@ -3,8 +3,9 @@
 // const productRoutes = require('../routes/product-routes');
 require('dotenv').config();
 const express = require('express');
+const bodyParser = require('body-parser');
 const connectDB = require('../database-setup/db.config');
-const contactRoutes = require('../controllers/contact-controller');
+const contactRoutes = require('../routes/contact.routes');
 
 // connect to the database
 const dataConnect = async () => {
@@ -13,6 +14,11 @@ const dataConnect = async () => {
 dataConnect();
 
 const app = express();
+
+// setup middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
 
 // setup product routes
 app.use(contactRoutes);
