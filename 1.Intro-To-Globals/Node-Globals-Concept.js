@@ -29,3 +29,19 @@ const globalModuleObject = module;
 const currentDirectory = __dirname;
 const runningFileName = __filename;
 console.log(globalModuleObject);
+
+// all globals
+const allGlobals = {
+    globalObj: global,
+    __dirname,
+    __filename,
+    module,
+    process,
+    console,
+    exports,
+    WebAssembly,
+    URL,
+    URLSearchParams,
+};
+
+console.log(allGlobals);

@@ -1,6 +1,6 @@
 const getLibraryInfo = (libObj) => {
-    const { name } = libObj;
-    const { version } = libObj;
+    const name = libObj.libraryVersion;
+    const version = libObj.libraryVersion;
     console.log(`Library Name: ${name} Version: ${version}`);
 };
 
