@@ -1,9 +1,8 @@
-import express from "express";
 import { config } from "dotenv";
-import movieRoutes from "./routes/movieRoutes.js";
 import { connectDB, disconnectDB } from "./config/db.js";
+import app from "./app.js";
 
-// import routes
+
 
 
 // set .env configs
@@ -12,12 +11,6 @@ config();
 connectDB();
 
 
-// setup express
-const app = express();
-
-
-// api routes
-app.use("/movies", movieRoutes);
 
 // start server
 const PORT = process.env.PORT || 5000;

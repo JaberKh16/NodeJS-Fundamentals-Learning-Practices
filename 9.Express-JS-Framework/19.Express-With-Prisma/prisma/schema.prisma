@@ -12,6 +12,8 @@ datasource db {
   provider = "postgresql"
 }
 
+// User -> Movie (Many to Many) -> Watchlist
+
 model User {
   id String @id @default(uuid())
   name String
