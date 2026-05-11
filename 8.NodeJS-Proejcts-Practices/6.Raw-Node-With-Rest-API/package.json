@@ -1,0 +1,12 @@
+{
+  "name": "6.raw-node-with-rest-api",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  }
+}
