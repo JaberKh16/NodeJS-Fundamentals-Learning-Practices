@@ -1,5 +1,5 @@
 import express from "express";
-import movieRoutes from "./routes/movieRoutes.js";
+import movieRoutes from "./routes/movie.routes.js";
 
 
 
@@ -11,8 +11,9 @@ const app = express();
 app.use("/movies", movieRoutes);
 
 
-// json setup
+// json setup => middleware to parse incoming JSON requests
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 
 // routes

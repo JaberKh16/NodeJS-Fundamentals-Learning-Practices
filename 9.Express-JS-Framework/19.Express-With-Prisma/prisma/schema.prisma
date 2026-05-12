@@ -20,4 +20,63 @@ model User {
   email String @unique
   password String
   createdAt DateTime @default(now())
+
+  // relations
+  // Synthetic relation to avoid circular dependencies
+  // Syntax: relationName Model @relation("identifier", fields: [foreignKey], references: [primaryKey])
+  createdMovies Movie[] @relation("MovieCreator")
+  watchlistItems WatchlistItem[]
+}
+
+
+model Movie {
+  id String @id @default(uuid())
+  title String
+  overview String? // optional field
+  director String
+  releaseYear Int
+  genre String[] @default([])
+  runtime Int? // optional field
+  posterUrl String? // optional field
+  createdBy String
+  // createdById String
+  createdAt DateTime @default(now())
+
+  // relations
+  // Synthetic relation to avoid circular dependencies
+  // Syntax: relationName Model @relation("identifier", fields: [foreignKey], references: [primaryKey])
+  creator User @relation("MovieCreator",fields: [createdBy], references: [id], onDelete: Cascade)
+  watchlistItems WatchlistItem[] 
+}
+
+model WatchlistItem {
+  id String @id @default(uuid())
+  userId String
+  movieId String
+  status WatchlistStatus @default(PLANNED) // enum field with default value
+  rating Int? // optional field
+  notes String? // optional field
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) 
+
+  // relations
+  // Synthetic relations to avoid circular dependencies
+  // Syntax: relationName Model @relation(fields: [foreignKey], references: [primaryKey])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+
+  // Indexes to optimize queries on userId and movieId
+  @@index([userId])
+  @@index([movieId])
+
+  // Unique constraint to prevent duplicate watchlist items for the same user and movie
+  @@unique([userId, movieId])
+}
+
+enum WatchlistStatus {
+  PLANNED
+  WATCHING
+  COMPLETED
+  DROPPED
 }
