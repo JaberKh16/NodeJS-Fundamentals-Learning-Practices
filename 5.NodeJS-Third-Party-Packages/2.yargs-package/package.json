@@ -1,0 +1,16 @@
+{
+  "name": "2.yargs-module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "yargs-basic.js",
+  "scripts": {
+    "test": "node yargs-basic.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "yargs": "^18.0.0"
+  }
+}
