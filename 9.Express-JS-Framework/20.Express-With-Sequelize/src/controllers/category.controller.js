@@ -1,0 +1,157 @@
+
+const CategoryModel = require('../models/category.nodel');
+const { ValidationError, UniqueConstraintError } = require('sequelize');
+
+
+function createCategory = async (req, res) => {
+  try {
+      const newCategory = await CategoryModel.create(req.body);
+      if(newCategory){
+        return res.status(201).json({ data: newCategory});
+      }
+  } catch(error){
+      console.error(JSON.stringify(error));
+      console.log(error.constructor.name); // returns if any validation that error class name
+      if(error instanceof UniqueConstraintError){
+        return res.status(409).json({
+          error: 'Validation Error',
+          details: {
+            field: error.errors[0].path,
+            message: error.errors[0].message
+          }
+        })
+      }
+      if(error instanceof ValidationError) {
+        return res.status(422).json({ error: 'Validation Error', details: error.errors.map(e => {
+          field: e.path, message: e.message
+        }));
+      }
+      return res.status(500).json({ msg: 'Something went wrong.'});
+  }
+}
+
+function listCategories = async(req, res) => {
+  try {
+    const listCategories = await CategoryModel.findAll(); // if found all list otherwise []
+    return res.status(200).json(data: listCategories);
+  } catch(error) {
+    console.error(JSON.stringify(error));
+    console.log(error.constructor.name); // returns if any validation that error class name
+    if(error instanceof UniqueConstraintError){
+      return res.status(409).json({
+        error: 'Validation Error',
+        details: {
+          field: error.errors[0].path,
+          message: error.errors[0].message
+        }
+      })
+    }
+    if(error instanceof ValidationError) {
+      return res.status(422).json({ error: 'Validation Error', details: error.errors.map(e => {
+        field: e.path, message: e.message
+      }));
+    }
+    return res.status(500).json({ msg: 'Something went wrong.'});
+  }
+}
+
+function getCategory = async(req, res) => {
+  try {
+    const { id } = req.params.id;
+
+  } catch(error) {
+    console.error(JSON.stringify(error));
+    console.log(error.constructor.name); // returns if any validation that error class name
+    if(error instanceof UniqueConstraintError){
+      return res.status(409).json({
+        error: 'Validation Error',
+        details: {
+          field: error.errors[0].path,
+          message: error.errors[0].message
+        }
+      })
+    }
+    if(error instanceof ValidationError) {
+      return res.status(422).json({ error: 'Validation Error', details: error.errors.map(e => {
+        field: e.path, message: e.message
+      }));
+    }
+    return res.status(500).json({ msg: 'Something went wrong.'});
+  }
+}
+
+function updateCategory = async(req, res) => {
+  try {
+    const { id } = req.params.id;
+    // const updatedCategory = await CategoryModel.update({
+    //   name: req.body.name
+    // }, {
+    //   where: {
+    //     id: id,
+    //     returning: true // work on postgres and return the updated category
+    //   }
+    // });
+    // console.log(JSON.stringify(updatedCategory));
+    //
+    const [updatedRows, updatedCategory] = await CategoryModel.update({
+      name: req.body.name
+    }, {
+      where: {
+        id: id,
+        returning: true // work on postgres and return the updated category
+      }
+    });
+    if(updatedRows === 0){
+      return res.status(204).json({ msg: 'Category not found'});
+    }
+    return res.status(200).json({ data: updatedCategory});
+
+  } catch(error) {
+    console.error(JSON.stringify(error));
+    console.log(error.constructor.name); // returns if any validation that error class name
+    if(error instanceof UniqueConstraintError){
+      return res.status(409).json({
+        error: 'Validation Error',
+        details: {
+          field: error.errors[0].path,
+          message: error.errors[0].message
+        }
+      })
+    }
+    if(error instanceof ValidationError) {
+      return res.status(422).json({ error: 'Validation Error', details: error.errors.map(e => {
+        field: e.path, message: e.message
+      }));
+    }
+    return res.status(500).json({ msg: 'Something went wrong.'});
+  }
+}
+
+function deleteCategory = async(req, res) => {
+  try {
+    // find the id
+    const fetchedPassedCategory = await sequelize.findByPk(req.params.id);
+    if(!fetchedPassedCategory){
+      return res.status(204).json({ msg: 'Category not found'});
+    }
+    // found perform the delete
+    const deletedRows = await sequelize.destroy({
+      where: {
+        id: req.params.id
+      }
+    });
+    if(deletedRows === 0){
+      return res.status(204).json({ msg: 'Category updation failed'});
+    }
+    return res.status(200).json({ msg: 'Category deleted.' });
+  } catch(error){
+    return res.status(500).json({ msg: 'Somethign went wrong.'})
+  }
+}
+
+
+
+
+module.exports = {
+  createCategory
+}
