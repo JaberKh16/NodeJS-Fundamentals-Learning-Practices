@@ -8,6 +8,8 @@ const createProduct = async(req, res)=> {
         const newProduct = await ProductModel.create(req.body);
         if(newProduct){
             return res.status(201).json({
+                status: res.statusCode,
+                message: 'Product created successfully',
                 data: newProduct
             })
         }
@@ -35,7 +37,7 @@ const createProduct = async(req, res)=> {
         }
 
         return res.status(500).json({
-            status: 200, 
+            status: res.statusCode,
             message: 'Something went wrong'
         })
 
@@ -55,14 +57,15 @@ const listProducts = async (req, res) => {
         });
         if(!listProducts){
             return res.status(200).json({
+                status: res.statusCode,
                 message: 'No products found'
             })
         }
-        return res.status(200).json({ message: 'Data found', data: listProducts});
+        return res.status(200).json({ status: res.statusCode, message: 'Data found', data: listProducts});
     } catch(error) {
         console.error(JSON.stringify(error));
         console.log(error.constructor.name); // returns if any validation that error class name
-        return res.status(500).json({ msg: 'Something went wrong.'});
+        return res.status(500).json({ status: res.statusCode, message: 'Something went wrong.'});
     }
 }
 
@@ -79,14 +82,14 @@ const getProduct = async (req, res) => {
             }
         });
         if(product) {
-            return res.status(200).json({ data: product });
+            return res.status(200).json({ status: res.statusCode, message: 'Data found', data: product });
         } else {
-            return res.status(404).json({ msg: 'Product not found.'});
+            return res.status(404).json({ status: res.statusCode, message: 'Product not found.'});
         }
     } catch(error) {
         console.error(JSON.stringify(error));
         console.log(error.constructor.name); // returns if any validation that error class name
-        return res.status(500).json({ msg: 'Something went wrong.'});
+        return res.status(500).json({ status: res.statusCode, message: 'Something went wrong.'});
     }
 }
 
@@ -95,10 +98,10 @@ const updateProduct = async (req, res) => {
         const { id } = req.params;
         const fetchProduct = await ProductModel.findByPk(id);
         if(!fetchProduct) {
-            return res.status(404).json({ msg: 'Product not found.'});
+            return res.status(404).json({ status: res.statusCode, message: 'Product not found.'});
         }
         const updatedProduct = await fetchProduct.update(req.body);
-        return res.status(200).json({ data: updatedProduct });
+        return res.status(200).json({ status: res.statusCode, message: 'Product updated.', data: updatedProduct });
     } catch(error) {
         console.error(JSON.stringify(error));
         console.log(error.constructor.name); // returns if any validation that error class name
@@ -124,7 +127,7 @@ const updateProduct = async (req, res) => {
         }
 
         return res.status(500).json({
-            status: 200, 
+            status: res.statusCode, 
             message: 'Something went wrong'
         })
     }
@@ -134,15 +137,15 @@ const deleteProduct = async (req, res) => {
     try {
         const fetchProduct = await ProductModel.findByPk(req.params.id);
         if(!fetchProduct){
-            return res.status(404).json({ msg: 'Product not found'});
+            return res.status(404).json({  status: res.statusCode, message: 'Product not found'});
         }
         // perform delete operation
         const deletedProduct = await fetchProduct.delete(fetchProduct);
-        return res.status(200).send()
+        return res.status(200).json({ status: res.statusCode, message: 'Product deleted.' });
     } catch(error) {
         console.error(JSON.stringify(error));
         console.log(error.constructor.name); // returns if any validation that error class name
-        return res.status(500).json({ msg: 'Something went wrong.'});
+        return res.status(500).json({ status: res.statusCode, message: 'Something went wrong.'});
     }
 }
 
