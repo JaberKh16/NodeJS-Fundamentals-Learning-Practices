@@ -1,4 +1,5 @@
 const ProductModel = require('../models/products.model');
+const CategoryModel = require('../models/category.model');
 const { ValidationError, UniqueConstraintError } = require('sequelize');
 
 
@@ -41,9 +42,15 @@ const createProduct = async(req, res)=> {
     }
 }
 
-function listProducts = async (req, res) => {
+const listProducts = async (req, res) => {
     try {
-        const listProducts = await ProductModel.find();
+        const listProducts = await ProductModel.findAll({
+            include: {
+                model: CategoryModel,
+                as: 'category', // alias defined in the association
+                attributes: ['id', 'name'] // specify the attributes to include from the CategoryModel
+            }
+        });
         if(!listProducts){
             return res.status(200).json({
                 message: 'No products found'

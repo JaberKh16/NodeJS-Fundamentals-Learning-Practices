@@ -97,6 +97,15 @@ const ProductModel = sequelize.define(
         notNull: {
           msg: 'Category ID is required'
         },
+        // custom model level validation to check if the categoryId exists in the CategoryModel table
+        categoryIdExists(value) {
+          return CategoryModel.findByPk(value) 
+            .then(category => {
+              if (!category) {
+                throw new Error(`Category ID ${value} does not exist`);
+              }
+            });
+        }
       }
     }
   },
@@ -106,5 +115,13 @@ const ProductModel = sequelize.define(
     underscored: true,
   },
 );
+
+// to work with the associations define in controller as include: {} required to define the association in the model file as well
+ProductModel.associate = (models) => {
+  ProductModel.belongsTo(models.Category, {
+    foreignKey: 'categoryId',
+    as: 'category' 
+  }
+});
 
 module.exports = ProductModel;
