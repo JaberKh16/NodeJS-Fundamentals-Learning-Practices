@@ -3,7 +3,7 @@ const CategoryModel = require('../models/category.nodel');
 const { ValidationError, UniqueConstraintError } = require('sequelize');
 
 
-function createCategory = async (req, res) => {
+const createCategory = async (req, res) => {
   try {
       const newCategory = await CategoryModel.create(req.body);
       if(newCategory){
@@ -12,6 +12,8 @@ function createCategory = async (req, res) => {
   } catch(error){
       console.error(JSON.stringify(error));
       console.log(error.constructor.name); // returns if any validation that error class name
+
+      // handle the unique constraint error
       if(error instanceof UniqueConstraintError){
         return res.status(409).json({
           error: 'Validation Error',
@@ -21,22 +23,25 @@ function createCategory = async (req, res) => {
           }
         })
       }
+      // handle the validation error
       if(error instanceof ValidationError) {
-        return res.status(422).json({ error: 'Validation Error', details: error.errors.map(e => {
-          field: e.path, message: e.message
-        }));
+        return res.status(422).json({ 
+          error: 'Validation Error', 
+          details: error.errors.map(e => ({ field: e.path, message: e.message }))
+        });
       }
       return res.status(500).json({ msg: 'Something went wrong.'});
   }
 }
 
-function listCategories = async(req, res) => {
+const listCategories = async(req, res) => {
   try {
     const listCategories = await CategoryModel.findAll(); // if found all list otherwise []
     return res.status(200).json(data: listCategories);
   } catch(error) {
     console.error(JSON.stringify(error));
     console.log(error.constructor.name); // returns if any validation that error class name
+    // handle the unique constraint error
     if(error instanceof UniqueConstraintError){
       return res.status(409).json({
         error: 'Validation Error',
@@ -46,22 +51,25 @@ function listCategories = async(req, res) => {
         }
       })
     }
+    // handle the validation error
     if(error instanceof ValidationError) {
-      return res.status(422).json({ error: 'Validation Error', details: error.errors.map(e => {
-        field: e.path, message: e.message
-      }));
+      return res.status(422).json({ 
+        error: 'Validation Error', 
+        details: error.errors.map(e => ({ field: e.path, message: e.message }))
+      });
     }
     return res.status(500).json({ msg: 'Something went wrong.'});
   }
 }
 
-function getCategory = async(req, res) => {
+const getCategory = async(req, res) => {
   try {
-    const { id } = req.params.id;
+    const { id } = req.params;
 
   } catch(error) {
     console.error(JSON.stringify(error));
     console.log(error.constructor.name); // returns if any validation that error class name
+    // handle the unique constraint error
     if(error instanceof UniqueConstraintError){
       return res.status(409).json({
         error: 'Validation Error',
@@ -71,18 +79,20 @@ function getCategory = async(req, res) => {
         }
       })
     }
+    // handle the validation error
     if(error instanceof ValidationError) {
-      return res.status(422).json({ error: 'Validation Error', details: error.errors.map(e => {
-        field: e.path, message: e.message
-      }));
+      return res.status(422).json({ 
+        error: 'Validation Error', 
+        details: error.errors.map(e => ({ field: e.path, message: e.message }))
+      });
     }
     return res.status(500).json({ msg: 'Something went wrong.'});
   }
 }
 
-function updateCategory = async(req, res) => {
+const updateCategory = async(req, res) => {
   try {
-    const { id } = req.params.id;
+    const { id } = req.params;
     // const updatedCategory = await CategoryModel.update({
     //   name: req.body.name
     // }, {
@@ -109,6 +119,7 @@ function updateCategory = async(req, res) => {
   } catch(error) {
     console.error(JSON.stringify(error));
     console.log(error.constructor.name); // returns if any validation that error class name
+    // handle the unique constraint error
     if(error instanceof UniqueConstraintError){
       return res.status(409).json({
         error: 'Validation Error',
@@ -118,10 +129,12 @@ function updateCategory = async(req, res) => {
         }
       })
     }
+    // handle the validation error
     if(error instanceof ValidationError) {
-      return res.status(422).json({ error: 'Validation Error', details: error.errors.map(e => {
-        field: e.path, message: e.message
-      }));
+      return res.status(422).json({ 
+        error: 'Validation Error', 
+        details: error.errors.map(e => ({ field: e.path, message: e.message }))
+      });
     }
     return res.status(500).json({ msg: 'Something went wrong.'});
   }
@@ -153,5 +166,9 @@ function deleteCategory = async(req, res) => {
 
 
 module.exports = {
-  createCategory
+  createCategory,
+  listCategories,
+  getCategory,
+  updateCategory,
+  deleteCategory
 }
