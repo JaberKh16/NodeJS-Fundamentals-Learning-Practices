@@ -1,0 +1,16 @@
+{
+  "name": "5.chalk-and-readline-package",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "chalk": "^5.6.2"
+  }
+}
