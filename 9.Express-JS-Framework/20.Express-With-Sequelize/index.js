@@ -2,6 +2,8 @@ const express = require("express");
 const dotenv = require("dotenv");
 const sequelize = require("./configs/database");
 const categoryRouter = require("./src/routes/category.route");
+const productRouter = require("./src/routes/product.route");
+const cors = require('cors');
 
 // setup dotenv
 dotenv.config({ path: process.cwd() + "/.env" });
@@ -13,7 +15,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 // app.use(express.urlencode({ }));
-app.use(categoryRouter);
+app.use('/api/categories', categoryRouter); // prefix all category routes with /api/categories
+app.use('/api/products', productRouter); // prefix all product routes with /api/products
 
 sequelize.sync().then(() => {
   console.log(`Database connected and synchronized.`);

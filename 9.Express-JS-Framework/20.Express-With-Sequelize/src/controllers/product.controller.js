@@ -45,6 +45,8 @@ const createProduct = async(req, res)=> {
 const listProducts = async (req, res) => {
     try {
         const listProducts = await ProductModel.findAll({
+            // exclude categoryId from the response and include the category details instead using the association defined in the model file
+            attributes: { exclude: ['categoryId'] },
             include: {
                 model: CategoryModel,
                 as: 'category', // alias defined in the association
@@ -67,7 +69,15 @@ const listProducts = async (req, res) => {
 const getProduct = async (req, res) => {
     try {
         // find using primary key
-        const product = await ProductModel.findByPk(req,params.id);
+        const product = await ProductModel.findByPk(req,params.id, {
+            // exclude categoryId from the response and include the category details instead using the association defined in the model file
+            attributes: { exclude: ['categoryId'] },
+            include: {
+                model: CategoryModel,
+                as: 'category', // alias defined in the association
+                attributes: ['id', 'name'] // specify the attributes to include from the CategoryModel
+            }
+        });
         if(product) {
             return res.status(200).json({ data: product });
         } else {
