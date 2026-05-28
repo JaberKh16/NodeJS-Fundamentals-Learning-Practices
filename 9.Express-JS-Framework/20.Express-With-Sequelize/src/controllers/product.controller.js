@@ -140,8 +140,33 @@ const deleteProduct = async (req, res) => {
             return res.status(404).json({  status: res.statusCode, message: 'Product not found'});
         }
         // perform delete operation
-        const deletedProduct = await fetchProduct.delete(fetchProduct);
+        await fetchProduct.destroy();
         return res.status(200).json({ status: res.statusCode, message: 'Product deleted.' });
+    } catch(error) {
+        console.error(JSON.stringify(error));
+        console.log(error.constructor.name); // returns if any validation that error class name
+        return res.status(500).json({ status: res.statusCode, message: 'Something went wrong.'});
+    }
+}
+
+const getProductByCategoryId = async (req, res) => {
+    try {
+        const { categoryId } = req.params;
+        if(!await CategoryModel.findByPk(categoryId)) { 
+            return res.status(400).json({ status: res.statusCode, message: 'Category ID is required.'});
+        }
+        const products = await ProductModel.findAll({
+            where: { categoryId},
+            include: {
+                model: CategoryModel,
+                as: 'category', // alias defined in the association
+                attributes: ['id', 'name'] // specify the attributes to include from the CategoryModel
+            }
+        });
+        if(products.length === 0) {
+            return res.status(404).json({ status: res.statusCode, message: 'No products found for this category.'});
+        }
+        return res.status(200).json({ status: res.statusCode, message: 'Data found', data: products });
     } catch(error) {
         console.error(JSON.stringify(error));
         console.log(error.constructor.name); // returns if any validation that error class name
@@ -154,5 +179,6 @@ module.exports = {
     listProducts,
     getProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getProductByCategoryId
 }

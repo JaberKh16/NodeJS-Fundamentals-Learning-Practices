@@ -140,15 +140,15 @@ const updateCategory = async(req, res) => {
   }
 }
 
-function deleteCategory = async(req, res) => {
+const deleteCategory = async(req, res) => {
   try {
     // find the id
-    const fetchedPassedCategory = await sequelize.findByPk(req.params.id);
+    const fetchedPassedCategory = await CategoryModel.findByPk(req.params.id);
     if(!fetchedPassedCategory){
       return res.status(204).json({ msg: 'Category not found'});
     }
     // found perform the delete
-    const deletedRows = await sequelize.destroy({
+    const deletedRows = await CategoryModel.destroy({
       where: {
         id: req.params.id
       }
