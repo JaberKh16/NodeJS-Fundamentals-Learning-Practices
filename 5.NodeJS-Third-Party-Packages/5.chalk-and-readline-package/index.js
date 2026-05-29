@@ -1,39 +1,36 @@
 import chalk from "chalk";
-import fs from "fs/promises";
 import readline from "readline";
-import os from "os";
-import path from "path";
 import {
   showSystemInfo,
   listDirectory,
   createDirectory,
+  createOrWriteFile,
   readFileContent,
   printTableData,
 } from "./utils/functionalities.js";
 
-// setup readline interface
-const r1 = readline.createInterface({
+const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
-// setup a promises based question function
 const question = (query) =>
-  new Promise((resolve) => r1.question(query, resolve));
+  new Promise((resolve) => rl.question(query, resolve));
 
-// clear the console
 const clearScreen = () => console.clear();
 
-// menu options
+let currentDir = process.cwd();
+
 async function showMenu() {
   clearScreen();
-  console.log(chalk.bold.bgBlue("\n   🚀 SYSTEM UTILITY TOOL   \n"));
+  console.log(chalk.bold.bgBlue("\n 🚀 SYSTEM UTILITY TOOL \n"));
   console.log(chalk.cyan("1.") + chalk.white(" Show System Information"));
   console.log(chalk.cyan("2.") + chalk.white(" List Current Directory"));
   console.log(chalk.cyan("3.") + chalk.white(" Create New Directory"));
   console.log(chalk.cyan("4.") + chalk.white(" Create / Write File"));
   console.log(chalk.cyan("5.") + chalk.white(" Read File"));
-  console.log(chalk.cyan("6.") + chalk.white(" Exit"));
+  console.log(chalk.cyan("6.") + chalk.white(" Print Table Data"));
+  console.log(chalk.cyan("7.") + chalk.white(" Exit"));
 
   const choice = await question(chalk.cyan("Please select an option: "));
 
@@ -42,39 +39,42 @@ async function showMenu() {
       showSystemInfo();
       break;
     case "2":
-      listDirectory();
+      await listDirectory(currentDir);
       break;
     case "3":
-      createDirectory();
+      await createDirectory(currentDir);
       break;
     case "4":
-      createOrWriteFile();
+      await createOrWriteFile(currentDir);
       break;
     case "5":
-      readFileContent();
+      await readFileContent(currentDir);
       break;
     case "6":
-      console.log(chalk.green("\n👋Exiting..."));
-      r1.close();
-      process.exit(0);
+      printTableData();
       break;
     case "7":
-      console.log(chalk.yellow("\n⚠️  Print table formatted data!"));
-      printTableData();
+      console.log(chalk.green("\n👋 Exiting..."));
+      rl.close();
+      process.exit(0);
       break;
     default:
       console.log(chalk.red("Invalid option, please try again."));
-      setTimeout(showMenu, 2000);
   }
 
-  await question(chalk.gray("\nPress Enter to return to the menu..."));
-  showMenu();
+  if (choice !== "7") {
+    await question(chalk.gray("\nPress Enter to return to the menu..."));
+    showMenu();
+  }
 }
 
-function runApp() {
-  // Start the tool
-  console.log(chalk.bold.magenta("Welcome to Interactive System Tool!"));
-  showMenu();
-}
-
-runApp();
+// Start the app
+const runApp = async () => {
+  try {
+    console.log(chalk.bold.magenta("Welcome to Interactive System Tool!"));
+    await showMenu();
+  } catch (err) {
+    console.log(chalk.red("An error occurred: ") + err.message);
+    rl.close();
+  }
+};
