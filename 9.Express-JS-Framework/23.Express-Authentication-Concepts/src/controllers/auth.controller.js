@@ -69,3 +69,25 @@ export const handleRefreshToken = async (req, res) => {
         return res.status(400).json({ error: error.message });
     }
 }
+
+
+export const handleForgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const { message, token } = await AuthService.forgotPassword(email);
+        // Here you would typically send the reset token to the user's email address
+        return res.status(200).json({ message: message, token: token });
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+}
+
+export const handleResetPassword = async (req, res) => {
+    try {
+        const { token, newPassword } = req.body;
+        const message = await AuthService.resetPassword(token, newPassword);
+        return res.status(200).json({ message: message });
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+}

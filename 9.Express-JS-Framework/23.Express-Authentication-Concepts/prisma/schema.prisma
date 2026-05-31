@@ -22,4 +22,6 @@ model User {
   updatedAt DateTime @updatedAt
   accessToken String?  @unique
   refreshToken String? @unique
+  resetToken String? @unique
+  resetTokenExpiry DateTime?
 }

@@ -1,4 +1,6 @@
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
+
 
 
 const generateAccessToken = (userId) => {
@@ -17,4 +19,19 @@ const generateRefreshToken = (userId) => {
     );
 }
 
-export { generateAccessToken, generateRefreshToken };   
+const verifyAccessToken = (token, option) => {
+    try {
+        return jwt.verify(token, option);
+    } catch (error) {
+        return null;
+    }
+}
+
+
+const generateResetToken = () => {
+    const token = crypto.randomBytes(64).toString('hex');
+    const expiry = new Date(Date.now() + 100 *60 *15); // Token expires in 15 minutes
+    return { token, expiry };
+} 
+
+export { generateAccessToken, generateRefreshToken, verifyAccessToken, generateResetToken };   

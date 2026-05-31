@@ -1,6 +1,6 @@
 import prismaClient from "../utils/prisma-client";
 import { hashPassword } from "../utils/hash";
-import { generateAccessToken, generateRefreshToken } from "../utils/jwt.utils";
+import { generateAccessToken, generateRefreshToken, generateResetToken } from "../utils/jwt.utils";
 
 export const registerUser = async (email, password, username) => {
     if(!email || !password || !username) {
@@ -68,3 +68,53 @@ export const refreshAccessToken = async (refreshToken) => {
     return { accessToken, refreshToken: newRefreshToken };
 }
  
+
+export const forgotPassword = async (email) => {
+    if(!email) {
+        throw new Error("Email is required");
+    }
+    const user = await prismaClient.user.findUnique({
+        where: {email: email}
+    });
+    if(!user) {
+        throw new Error("User not found");
+    }
+    // generate reset token and send email logic can be implemented here
+    const { token, expiry } = generateResetToken();
+    await prismaClient.user.update({
+        where: { id: user.id },
+        data: {
+            resetToken: token,
+            resetTokenExpiry: expiry
+        }
+    });
+    // Send reset email logic can be implemented here (e.g., using nodemailer)
+    return { message: "Password reset email sent", token: token }; // In production, you would not return the token in the response
+}
+
+export const resetPassword = async(token, newPassword) => {
+    if(!token || !newPassword) {
+        throw new Error("Reset token and new password are required");
+    }
+    const user = await prismaClient.user.findFirst({
+        where: {
+            resetToken: token,
+            resetTokenExpiry: {
+                gt: new Date()
+            }
+        }
+    });
+    if(!user) {
+        throw new Error("Invalid or expired reset token");
+    }
+    const hashedPassword = await hashPassword(newPassword);
+    await prismaClient.user.update({
+        where: { id: user.id },
+        data: {
+            password: hashedPassword,
+            resetToken: null,
+            resetTokenExpiry: null
+        }
+    });
+    return { message: "Password reset successfully" };
+}
