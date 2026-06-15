@@ -6,30 +6,33 @@ const {
     verifyRefreshToken
 } = require('../utils/token');
 
-const handleUserRegister = async(req, res) => {
+const handleUserRegister = async (req, res) => {
     try {
-        // check all field are provided
+        // check all fields are provided
         const { username, email, password } = req.body;
-        if(!username || !email || !password ){
-            return res.status(409).json({
+        if (!username || !email || !password) {
+            return res.status(400).json({  
+                status: 400,
+                success: false,
+                message: 'Username, email and password are required.'
+            });
+        }
+
+        // check if email already exists 
+        const existingUser = await User.findOne({ email: email });
+        if (existingUser) {
+            return res.status(409).json({  // Fixed: 200 → 409 (Conflict)
                 status: 409,
-                msg: 'username, email and password are required.'
+                success: false,
+                message: 'User already exists with this email.'
             });
         }
 
-        // check if email already exist
-        const fetchExisted = await User.findOne({ emai: email });
-        if(fetchExisted) {
-            return res.status(200).json({
-                stauts: 200,
-                msg: 'User already existed.'
-            });
-        }
-
-        // hashed the password
-        const hashedPassword = hashPasswordScrypt(password);
+        // hash the password (fixed: added await)
+        const hashedPassword = await hashPasswordScrypt(password);
+        
         const newEntry = await User.create({
-            name,
+            username,
             email,
             password: hashedPassword.hash,
             salt: hashedPassword.salt,
@@ -40,55 +43,57 @@ const handleUserRegister = async(req, res) => {
         const accessToken = generateAccessToken({
             userId: newEntry._id,
             email: newEntry.email,
-            role: newEntry.role
+            role: newEntry.role || 'user'
         });
         
         const refreshToken = generateRefreshToken({
             userId: newEntry._id,
             email: newEntry.email,
-            role: newEntry.role
+            role: newEntry.role || 'user'
         });
         
-        // Store refresh token
+        // store refresh token
         newEntry.refreshToken = refreshToken;
         await newEntry.save();
 
-
         return res.status(201).json({
             success: true,
+            status: 201,
             message: 'User registered successfully',
             data: {
                 user: {
                     id: newEntry._id,
-                    name: newEntry.name,
+                    username: newEntry.username,
                     email: newEntry.email,
-                    role: newEntry.role
+                    role: newEntry.role || 'user'
                 },
                 accessToken,
                 refreshToken
             }
         });
 
-    } catch(err){
+    } catch (err) {
         return res.status(500).json({
             status: 500,
-            msg: err.message
+            success: false,
+            message: err.message
         });
     }
-}
+};
 
-
-const handleUserLogin = async(req, res) => {
+const handleUserLogin = async (req, res) => {
     try {
-        // check if email already exist
+        // check if email and password are provided
         const { email, password } = req.body;
-        if(!email || !password ){
-            return res.status(409).json({
-                status: 409,
-                msg: 'email and password are required.'
+        if (!email || !password) {
+            return res.status(400).json({  // Fixed: 409 → 400
+                status: 400,
+                success: false,
+                message: 'Email and password are required.'
             });
         }
-        // Check if user exists (fixed typo: emai -> email)
+
+        // check if user exists
         const existingUser = await User.findOne({ email: email });
         if (!existingUser) {
             return res.status(401).json({
@@ -98,15 +103,15 @@ const handleUserLogin = async(req, res) => {
             });
         }
 
-        // if existed then compare password
+        // verify password (fixed: added await)
         const isValidPassword = await verifyPasswordScrypt(
             password,
-            existingUser.password, // stored hashed
+            existingUser.password,
             existingUser.salt,
             existingUser.options
         );
 
-        if(!isValidPassword) {
+        if (!isValidPassword) {
             return res.status(401).json({
                 status: 401,
                 success: false,
@@ -114,32 +119,34 @@ const handleUserLogin = async(req, res) => {
             });
         }
 
-        // generate access token 
+        // Generate access token
         const accessToken = generateAccessToken({
             userId: existingUser._id,
             email: existingUser.email,
             role: existingUser.role || 'user'
         });
 
-        // generate refresh token 
-        const refreshToken = generateRefereshToken({
-            userId: existingUser._id
+        // Generate refresh token (fixed: function name typo)
+        const refreshToken = generateRefreshToken({  // Fixed: generateRefereshToken → generateRefreshToken
+            userId: existingUser._id,
+            email: existingUser.email,
+            role: existingUser.role || 'user'
         });
 
-        // Store refresh token in database (optional but recommended)
+        // sstore refresh token in database
         existingUser.refreshToken = refreshToken;
         await existingUser.save();
 
         return res.status(200).json({
             status: 200,
             success: true,
-            msg: 'Login successful',
+            message: 'Login successful',  // Fixed: msg → message for consistency
             data: {
                 user: {
                     id: existingUser._id,
+                    username: existingUser.username,
                     email: existingUser.email,
-                    name: existingUser.username,
-                    role: existingUser.role
+                    role: existingUser.role || 'user'
                 },
                 accessToken,
                 refreshToken,
@@ -147,8 +154,7 @@ const handleUserLogin = async(req, res) => {
             }
         });
 
-
-    } catch(err){
+    } catch (err) {
         console.error('Login error:', err);
         return res.status(500).json({
             status: 500,
@@ -157,7 +163,7 @@ const handleUserLogin = async(req, res) => {
             error: err.message
         });
     }
-}
+};
 
 
 const handleUserLogout = async(req, res) => {

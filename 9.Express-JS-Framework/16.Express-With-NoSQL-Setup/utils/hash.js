@@ -32,21 +32,7 @@ async function verifyPasswordScrypt(password, hash, salt, options) {
     });
 }
 
-// Usage
-async function exampleScrypt() {
-    const password = 'mySecurePassword123!';
-    const hashed = await hashPasswordScrypt(password);
-    console.log('Scrypt Hash:', hashed.hash);
-    console.log('Scrypt Salt:', hashed.salt);
-    
-    const isValid = await verifyPasswordScrypt(password, hashed.hash, hashed.salt, hashed.options);
-    console.log('Password valid:', isValid);
-}
-
-// exampleScrypt();
-
-
 module.exports = {
     hashPasswordScrypt,
     verifyPasswordScrypt
-}
+};
