@@ -1,0 +1,27 @@
+# Node modules
+node_modules/
+
+# Lock files
+yarn.lock
+*-lock.json
+package-lock.json
+
+# Environment files
+.env
+.env.*
+**/.env
+**/.env.*
+
+# Config files
+server.config.json
+**/server.config.json
+
+# ESLint config (optional - include if you don't want to commit it)
+.eslintrc.json
+
+# Other common Node.js ignores
+logs/
+dist/
+build/
+coverage/
+.DS_Store
