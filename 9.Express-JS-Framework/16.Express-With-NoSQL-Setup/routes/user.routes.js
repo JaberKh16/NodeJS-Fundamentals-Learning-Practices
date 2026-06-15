@@ -18,5 +18,16 @@ router.post('/logout', handleUserLogout);
 router.get('/list', handleUserList);
 router.put('/update/:id', handleUserUpdate);
 router.delete('/delete/:id', handleUserDelete);
+router.post('/refresh-token', handleRefreshToken);
+
+// Example protected route
+router.get('/profile', authenticateToken, async (req, res) => {
+    res.json({
+        success: true,
+        user: req.user
+    });
+});
+
+
 
 module.exports = router;

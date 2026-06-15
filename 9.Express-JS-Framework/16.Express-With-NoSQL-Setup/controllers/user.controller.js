@@ -31,27 +31,27 @@ const handleUserRegister = async(req, res) => {
         const newEntry = await User.create({
             name,
             email,
-            password: hashed.hash,
-            salt: hashed.salt,
-            options: hashed.options
+            password: hashedPassword.hash,
+            salt: hashedPassword.salt,
+            options: hashedPassword.options
         });
 
         // Generate tokens
         const accessToken = generateAccessToken({
-            userId: user._id,
-            email: user.email,
-            role: user.role
+            userId: newEntry._id,
+            email: newEntry.email,
+            role: newEntry.role
         });
         
         const refreshToken = generateRefreshToken({
-            userId: user._id,
-            email: user.email,
-            role: user.role
+            userId: newEntry._id,
+            email: newEntry.email,
+            role: newEntry.role
         });
         
         // Store refresh token
-        user.refreshToken = refreshToken;
-        await user.save();
+        newEntry.refreshToken = refreshToken;
+        await newEntry.save();
 
 
         return res.status(201).json({
@@ -59,10 +59,10 @@ const handleUserRegister = async(req, res) => {
             message: 'User registered successfully',
             data: {
                 user: {
-                    id: user._id,
-                    name: user.name,
-                    email: user.email,
-                    role: user.role
+                    id: newEntry._id,
+                    name: newEntry.name,
+                    email: newEntry.email,
+                    role: newEntry.role
                 },
                 accessToken,
                 refreshToken

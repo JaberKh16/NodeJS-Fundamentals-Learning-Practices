@@ -117,6 +117,11 @@ productController.handleDeleteProduct = async(req, res) => {
                 msg: 'Product id not found to delete'
             });
         }
+        return res.status(200).json({
+            status: 200,
+            msg: 'Product id been deleted.',
+            data: product
+        })
     } catch(err) {
         return res.status(50).json({
             status: 500,

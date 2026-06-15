@@ -32,8 +32,8 @@ router.get('/author/:author', getBooksByAuthor);
 router.get('/isbn/:isbn', getBookByIsbn);
 
 // Main CRUD routes
-router.get('/', getAllBooks);
-router.post('/', createBook);
+router.get('/index', getAllBooks);
+router.post('/create', createBook);
 router.get('/:id', getBookById);
 router.put('/update/:id', updateBook);
 router.delete('/delete/:id', deleteBook);
