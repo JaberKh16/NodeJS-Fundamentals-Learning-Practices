@@ -8,6 +8,8 @@ const bodyParser = require('body-parser');
 const connectDB = require('../database-setup/db.config');
 const contactRoutes = require('../routes/contact.routes');
 const urlRoutes = require('../routes/url.routes');
+const bookRoutes = require('../routes/book.routes');
+const productRoutes = require('../routes/product.routes');
 
 // connect to the database
 const dataConnect = async () => {
@@ -23,8 +25,11 @@ app.use(express.urlencoded({ extended: false }));
 // app.use(bodyParser.json());
 
 // setup product routes
-app.use(contactRoutes);
-app.use('/url', urlRoutes);
+app.use('/api/contacts', contactRoutes);
+app.use('/api/url', urlRoutes);
+app.use('/api/books',bookRoutes);
+app.use('/api/products', productRoutes);
+
 
 app.get('/', (request, response) =>
     // const notes = fetchedData();
