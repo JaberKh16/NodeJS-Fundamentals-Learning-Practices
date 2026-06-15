@@ -23,7 +23,7 @@ const bookSchema = mongoose.Schema({
         maxlength: [100, 'Author name cannot exceed 100 characters']
     },
     price: {
-        type: Number,  // Changed from String to Number for better validation
+        type: Number,
         required: [true, 'Price is required.'],
         min: [0, 'Price cannot be negative'],
         max: [10000, 'Price cannot exceed 10,000'],
@@ -36,10 +36,8 @@ const bookSchema = mongoose.Schema({
     },
     status: {
         type: Boolean,
-        default: true,
-        description: 'true = active, false = inactive'
+        default: true
     },
-    // Additional professional fields
     description: {
         type: String,
         maxlength: [2000, 'Description cannot exceed 2000 characters'],
@@ -117,18 +115,9 @@ const bookSchema = mongoose.Schema({
     coverImage: {
         type: String,
         match: [/^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))$/, 'Please enter a valid image URL']
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-        immutable: true  // Cannot be changed after creation
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
     }
 }, {
-    timestamps: true,  // Automatically manages createdAt and updatedAt
+    timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
 });
@@ -146,21 +135,15 @@ bookSchema.virtual('finalPrice').get(function() {
     return this.price;
 });
 
-// Middleware to update the 'updatedAt' field
-bookSchema.pre('save', function(next) {
-    this.updatedAt = Date.now();
-    next();
-});
-
-// Instance method example
+// Instance method
 bookSchema.methods.applyDiscount = function(discountPercent) {
     this.discountPercentage = Math.min(discountPercent, 90);
     return this.save();
 };
 
-// Static method example
+// Static method
 bookSchema.statics.findByCategory = function(category) {
     return this.find({ category: category, status: true });
 };
 
-module.exports = mongoose.model('books', bookSchema);
+module.exports = mongoose.model('Book', bookSchema);

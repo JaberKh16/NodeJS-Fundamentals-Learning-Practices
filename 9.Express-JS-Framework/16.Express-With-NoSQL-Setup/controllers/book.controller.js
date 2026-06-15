@@ -18,12 +18,12 @@ const createBook = async (req, res) => {
 
         const book = await Book.create(req.body);
         
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
             data: book
         });
     } catch (error) {
-        res.status(400).json({
+        return res.status(400).json({
             success: false,
             message: error.message
         });
@@ -97,7 +97,7 @@ const getAllBooks = async (req, res) => {
             total = await Book.countDocuments(filter);
         }
         
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             count: books.length,
             total,
@@ -106,7 +106,7 @@ const getAllBooks = async (req, res) => {
             data: books
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: error.message
         });
@@ -127,12 +127,12 @@ const getBookById = async (req, res) => {
             });
         }
         
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             data: book
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: error.message
         });
@@ -153,12 +153,12 @@ const getBookByIsbn = async (req, res) => {
             });
         }
         
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             data: book
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: error.message
         });
@@ -204,12 +204,12 @@ const updateBook = async (req, res) => {
             });
         }
         
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             data: book
         });
     } catch (error) {
-        res.status(400).json({
+        return res.status(400).json({
             success: false,
             message: error.message
         });
@@ -230,13 +230,13 @@ const deleteBook = async (req, res) => {
             });
         }
         
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: 'Book deleted successfully',
             data: book
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: error.message
         });
@@ -268,7 +268,7 @@ const applyDiscount = async (req, res) => {
         
         await book.applyDiscount(discountPercent);
         
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: `Discount of ${discountPercent}% applied successfully`,
             data: {
@@ -278,7 +278,7 @@ const applyDiscount = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: error.message
         });
@@ -324,7 +324,7 @@ const updateQuantity = async (req, res) => {
         
         await book.save();
         
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             data: {
                 name: book.name,
@@ -333,7 +333,7 @@ const updateQuantity = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: error.message
         });
@@ -347,13 +347,13 @@ const getBooksByCategory = async (req, res) => {
     try {
         const books = await Book.findByCategory(req.params.category);
         
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             count: books.length,
             data: books
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: error.message
         });
@@ -370,13 +370,13 @@ const getBooksByAuthor = async (req, res) => {
             status: true
         }).sort({ publishedDate: -1 });
         
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             count: books.length,
             data: books
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: error.message
         });
@@ -398,13 +398,13 @@ const getTopRatedBooks = async (req, res) => {
         .sort({ rating: -1, price: 1 })
         .limit(limit);
         
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             count: books.length,
             data: books
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: error.message
         });
@@ -427,13 +427,13 @@ const bulkCreateBooks = async (req, res) => {
         
         const result = await Book.insertMany(books, { ordered: false });
         
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
             message: `${result.length} books created successfully`,
             data: result
         });
     } catch (error) {
-        res.status(400).json({
+        return res.status(400).json({
             success: false,
             message: error.message,
             successful: error.result?.insertedCount || 0,
@@ -469,13 +469,13 @@ const updateBookStatus = async (req, res) => {
             });
         }
         
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: `Book ${status ? 'activated' : 'deactivated'} successfully`,
             data: book
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: error.message
         });
@@ -513,7 +513,7 @@ const getBookStats = async (req, res) => {
             }
         ]);
         
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             data: {
                 overview: stats[0] || {},
@@ -521,7 +521,7 @@ const getBookStats = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: error.message
         });

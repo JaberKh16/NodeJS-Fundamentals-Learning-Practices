@@ -18,18 +18,20 @@ const userSchema = mongoose.Schema({
         minlength: [10, 'email must be atleast 10 characters'],
         lowercase: true,
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
-
     },
     password: {
         type: String,
         required: [true, 'password is required'],
-        unique: true,
-        trim: true,
-        minlength: [10, 'password must be atleast 10 characters'],
+        trim: true
     },
     salt: {
         type: String,
         required: true
+    },
+    keyLength: {
+        type: Number,
+        required: true,
+        default: 64
     },
     options: {
         type: Object,
@@ -37,15 +39,16 @@ const userSchema = mongoose.Schema({
     },
     status: {
         type: Boolean,
-        default: true,
-        description: 'true=active, false=inactive'
+        default: true
     },
     role: {
         type: String,
+        enum: ['user', 'admin'],
         default: 'user'
     },
     accessToken: {
         type: String,
+        default: ''
     },
     refreshToken: {
         type: String,
@@ -53,12 +56,7 @@ const userSchema = mongoose.Schema({
     },
     lastLogin: {
         type: Date
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
     }
-    
 }, {
     timestamps: true
 });

@@ -8,27 +8,24 @@ const {
 
 const handleUserRegister = async (req, res) => {
     try {
-        // check all fields are provided
         const { username, email, password } = req.body;
         if (!username || !email || !password) {
-            return res.status(400).json({  
+            return res.status(400).json({
                 status: 400,
                 success: false,
                 message: 'Username, email and password are required.'
             });
         }
 
-        // check if email already exists 
         const existingUser = await User.findOne({ email: email });
         if (existingUser) {
-            return res.status(409).json({  // Fixed: 200 → 409 (Conflict)
+            return res.status(409).json({
                 status: 409,
                 success: false,
                 message: 'User already exists with this email.'
             });
         }
 
-        // hash the password (fixed: added await)
         const hashedPassword = await hashPasswordScrypt(password);
         
         const newEntry = await User.create({
@@ -36,10 +33,10 @@ const handleUserRegister = async (req, res) => {
             email,
             password: hashedPassword.hash,
             salt: hashedPassword.salt,
+            keyLength: hashedPassword.keyLength,
             options: hashedPassword.options
         });
 
-        // Generate tokens
         const accessToken = generateAccessToken({
             userId: newEntry._id,
             email: newEntry.email,
@@ -52,7 +49,6 @@ const handleUserRegister = async (req, res) => {
             role: newEntry.role || 'user'
         });
         
-        // store refresh token
         newEntry.refreshToken = refreshToken;
         await newEntry.save();
 
@@ -83,17 +79,15 @@ const handleUserRegister = async (req, res) => {
 
 const handleUserLogin = async (req, res) => {
     try {
-        // check if email and password are provided
         const { email, password } = req.body;
         if (!email || !password) {
-            return res.status(400).json({  // Fixed: 409 → 400
+            return res.status(400).json({
                 status: 400,
                 success: false,
                 message: 'Email and password are required.'
             });
         }
 
-        // check if user exists
         const existingUser = await User.findOne({ email: email });
         if (!existingUser) {
             return res.status(401).json({
@@ -103,11 +97,11 @@ const handleUserLogin = async (req, res) => {
             });
         }
 
-        // verify password (fixed: added await)
         const isValidPassword = await verifyPasswordScrypt(
             password,
             existingUser.password,
             existingUser.salt,
+            existingUser.keyLength,
             existingUser.options
         );
 
@@ -119,28 +113,27 @@ const handleUserLogin = async (req, res) => {
             });
         }
 
-        // Generate access token
         const accessToken = generateAccessToken({
             userId: existingUser._id,
             email: existingUser.email,
             role: existingUser.role || 'user'
         });
 
-        // Generate refresh token (fixed: function name typo)
         const refreshToken = generateRefreshToken({
             userId: existingUser._id,
             email: existingUser.email,
             role: existingUser.role || 'user'
         });
 
-        // sstore refresh token in database
         existingUser.refreshToken = refreshToken;
+        existingUser.accessToken = accessToken;
+        existingUser.lastLogin = new Date();
         await existingUser.save();
 
         return res.status(200).json({
             status: 200,
             success: true,
-            message: 'Login successful',  
+            message: 'Login successful',
             data: {
                 user: {
                     id: existingUser._id,
@@ -202,7 +195,7 @@ const handleRefreshToken = async(req, res) => {
             });
         }
 
-                // Check if token exists in database
+        // Check if token exists in database
         const user = await User.findOne({
             _id: verified.payload.userId,
             refreshToken: refreshToken
@@ -275,7 +268,7 @@ const handleUserUpdate = async(req, res) => {
         return res.status(200).json({
             status: 200,
             msg: 'User id updated',
-            data: deleteUser
+            data: updateUser
         });
     } catch(err) {
         return res.status(500).json({
