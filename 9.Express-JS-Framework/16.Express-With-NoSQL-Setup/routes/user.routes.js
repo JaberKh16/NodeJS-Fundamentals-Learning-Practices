@@ -9,6 +9,7 @@ const {
    handleUserDelete
 
 } = require('../controllers/user.controller');
+const { authenticateToken } = require('../utils/token');
 
 const router = express.Router();
 

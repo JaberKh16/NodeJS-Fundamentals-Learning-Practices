@@ -3,7 +3,7 @@ const {hashPasswordScrypt, verifyPasswordScrypt} = require('../utils/hash');
 const {
     generateAccessToken,
     generateRefreshToken,
-    verifyRefreshToken,
+    verifyRefreshToken
 } = require('../utils/token');
 
 const handleUserRegister = async(req, res) => {
