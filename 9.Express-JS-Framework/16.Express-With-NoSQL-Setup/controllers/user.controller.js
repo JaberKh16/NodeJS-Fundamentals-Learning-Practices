@@ -127,7 +127,7 @@ const handleUserLogin = async (req, res) => {
         });
 
         // Generate refresh token (fixed: function name typo)
-        const refreshToken = generateRefreshToken({  // Fixed: generateRefereshToken → generateRefreshToken
+        const refreshToken = generateRefreshToken({
             userId: existingUser._id,
             email: existingUser.email,
             role: existingUser.role || 'user'
@@ -140,7 +140,7 @@ const handleUserLogin = async (req, res) => {
         return res.status(200).json({
             status: 200,
             success: true,
-            message: 'Login successful',  // Fixed: msg → message for consistency
+            message: 'Login successful',  
             data: {
                 user: {
                     id: existingUser._id,
@@ -265,7 +265,7 @@ const handleUserList = async(req, res) => {
 
 const handleUserUpdate = async(req, res) => {
     try {
-        const updateUser = await User.findIdAndUpdate(req.params.id, req.body, { new: true });
+        const updateUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if(!updateUser){
             return res.status(204).json({
                 status: 204,
@@ -288,7 +288,7 @@ const handleUserUpdate = async(req, res) => {
 
 const handleUserDelete = async(req, res) => {
     try {
-        const deleteUser = await User.findIdAndDelete(req.params.id);
+        const deleteUser = await User.findByIdAndDelete(req.params.id);
         if(!deleteUser){
             return res.status(204).json({
                 status: 204,
