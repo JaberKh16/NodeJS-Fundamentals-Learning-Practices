@@ -22,7 +22,6 @@ const userSchema = mongoose.Schema({
         required: [true, 'password is required'],
         unique: true,
         trim: true,
-        maxlength: [100, 'password can not exceed 100 characters'],
         minlength: [10, 'password must be atleast 10 characters'],
     },
     salt: {
