@@ -16,6 +16,9 @@ const userSchema = mongoose.Schema({
         trim: true,
         maxlength: [30, 'email can not exceed 30 characters'],
         minlength: [10, 'email must be atleast 10 characters'],
+        lowercase: true,
+        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
+
     },
     password: {
         type: String,
@@ -55,8 +58,9 @@ const userSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     }
-
     
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model('users', userSchema);
