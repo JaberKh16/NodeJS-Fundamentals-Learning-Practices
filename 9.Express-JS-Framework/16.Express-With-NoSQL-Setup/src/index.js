@@ -4,12 +4,12 @@
 // const productRoutes = require('../routes/product-routes');
 require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
 const connectDB = require('../database-setup/db.config');
 const contactRoutes = require('../routes/contact.routes');
 const urlRoutes = require('../routes/url.routes');
 const bookRoutes = require('../routes/book.routes');
 const productRoutes = require('../routes/product.routes');
+const userRoutes = require('../routes/user.routes');
 
 // connect to the database
 const dataConnect = async () => {
@@ -29,6 +29,7 @@ app.use('/api/contacts', contactRoutes);
 app.use('/api/url', urlRoutes);
 app.use('/api/books',bookRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/user', userRoutes);
 
 
 app.get('/', (request, response) =>

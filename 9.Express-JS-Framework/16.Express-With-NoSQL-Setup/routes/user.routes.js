@@ -3,6 +3,7 @@ const {
    handleUserRegister,
    handleUserLogin,
    handleUserLogout,
+   handleRefreshToken,
    handleUserList,
    handleUserUpdate,
    handleUserDelete
@@ -12,10 +13,10 @@ const {
 const router = express.Router();
 
 router.post('/register', handleUserRegister);
-router.post('/logun', handleUserLogin);
+router.post('/login', handleUserLogin);
 router.post('/logout', handleUserLogout);
 router.get('/list', handleUserList);
 router.put('/update/:id', handleUserUpdate);
-router.delete('/register', handleUserDelete);
+router.delete('/delete/:id', handleUserDelete);
 
 module.exports = router;

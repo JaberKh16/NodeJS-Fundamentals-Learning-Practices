@@ -1,5 +1,10 @@
 const User = require('../models/user.model');
 const {hashPasswordScrypt, verifyPasswordScrypt} = require('../utils/hash');
+const {
+    generateAccessToken,
+    generateRefreshToken,
+    verifyRefreshToken,
+} = require('../utils/token');
 
 const handleUserRegister = async(req, res) => {
     try {
@@ -300,6 +305,10 @@ const handleUserDelete = async(req, res) => {
 
 
 module.exports = {
+    handleUserRegister,
+    handleUserLogin,
+    handleUserLogout,
+    handleRefreshToken,
     handleUserList,
     handleUserUpdate,
     handleUserDelete
