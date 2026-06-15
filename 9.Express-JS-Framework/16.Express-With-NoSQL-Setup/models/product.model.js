@@ -20,7 +20,7 @@ const productSchema = mongoose.Schema({
         trim: true
     },
     price: {
-        type: String, 
+        type: Number, 
         required: [true, 'price is required.'],
         min: [0, 'Price cannot be negative'],
         max: [10000, 'Price cannot exceed 10,000'],
@@ -40,7 +40,7 @@ const productSchema = mongoose.Schema({
         type: String,
         required: [true, 'Category is required'],
         enum: {
-            values: ['Fiction', 'Non-Fiction', 'Science', 'Technology', 'History', 'Biography', 'Children'],
+            values: ['Fiction', 'Electronics', 'Non-Fiction', 'Science', 'Technology', 'History', 'Biography', 'Children'],
             message: '{VALUE} is not a valid category'
         },
         trim: true

@@ -57,7 +57,8 @@ productController.handleProductEntry = async(req, res) => {
         if(newProduct){
             return res.status(201).json({
                 status: 201,
-                msg: 'Product new entry successful.'
+                msg: 'Product new entry successful.',
+                data: newProduct
             })
         }
     } catch(err){

@@ -29,7 +29,7 @@ app.use('/api/contacts', contactRoutes);
 app.use('/api/url', urlRoutes);
 app.use('/api/books',bookRoutes);
 app.use('/api/products', productRoutes);
-app.use('/api/user', userRoutes);
+app.use('/api/users', userRoutes);
 
 
 app.get('/', (request, response) =>
