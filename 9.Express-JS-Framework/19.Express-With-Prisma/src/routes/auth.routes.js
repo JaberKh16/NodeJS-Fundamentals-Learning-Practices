@@ -1,5 +1,11 @@
-import express from "express";
-import { handleRegister, handleLogin, handleLogout } from "../controllers/authController.js";
+import express from 'express';
+
+import { 
+    handleRegister, 
+    handleLogin, 
+    handleLogout
+} 
+from '../controllers/auth.controller';
 
 // create router
 const router = express.Router();

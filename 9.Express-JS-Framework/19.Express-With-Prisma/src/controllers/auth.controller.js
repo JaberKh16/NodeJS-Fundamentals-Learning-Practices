@@ -1,9 +1,8 @@
 
-import e from "express";
-import { prisma } from "../config/db.js";
-import { generateToken } from "../../utils/generate-token-helper.js";
+import { prisma } from '../config/db.js';
+import { generateToken } from '../utils/generate-token-helper.js';
 
-const handleRegister = async (req, res) => {
+export const handleRegister = async (req, res) => {
     // process the rquested data
     try {
         const { name, email, password } = req.body;
@@ -52,7 +51,7 @@ const handleRegister = async (req, res) => {
     }
 };
 
-const handleLogin = async (req, res) => {
+export const handleLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -95,7 +94,7 @@ const handleLogin = async (req, res) => {
 }
 
 
-const handleLogout = async (req, res) => {
+export const handleLogout = async (req, res) => {
     try {
         // clear the token cookie
         res.clearCookie("token", {
@@ -117,5 +116,3 @@ const handleLogout = async (req, res) => {
         });
 }
 
-
-export { handleRegister, handleLogin, handleLogout };

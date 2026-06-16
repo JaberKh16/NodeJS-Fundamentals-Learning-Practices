@@ -1,5 +1,4 @@
-import e from "express";
-import { prisma } from "../db";
+import { prisma } from '../config/db.js';
 
 
 // Get all users
