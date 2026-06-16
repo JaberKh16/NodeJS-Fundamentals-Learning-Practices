@@ -1,10 +1,19 @@
-import { PrimsmaClient } from "@prisma/client";
+// import { PrismaClient } from '@prisma/client';
+import pkg from '@prisma/client';
+const { PrismaClient } = pkg;
 import { log } from "console";
+import { config } from 'dotenv';
 
 
+// Load environment variables
+config();
 
-const prisma = new PrimsmaClient({
-    log: NodeEnv === "development" ? ["query", "error", "warn"] : ["error"]
+// Get environment
+const NODE_ENV = process.env.NODE_ENV || 'development';
+
+
+const prisma = new PrismaClient({
+    log: NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"]
 });
 
 const connectDB = async () => {

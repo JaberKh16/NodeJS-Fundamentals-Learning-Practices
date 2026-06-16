@@ -7,6 +7,8 @@ import app from "./app.js";
 
 // set .env configs
 config();
+
+
 // db connection 
 connectDB();
 
@@ -14,7 +16,7 @@ connectDB();
 
 // start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
 });
 

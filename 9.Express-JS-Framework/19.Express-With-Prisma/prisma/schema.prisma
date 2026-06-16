@@ -80,3 +80,25 @@ enum WatchlistStatus {
   COMPLETED
   DROPPED
 }
+
+
+model Posts {
+  id String @id @default(uuid())
+  title String
+  author String
+  type PostTypes @default(General)
+  no_of_comments Int?
+  status Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+enum PostTypes {
+  Educational
+  Sports
+  Music
+  Science
+  Arts
+  Technology
+  General
+}
