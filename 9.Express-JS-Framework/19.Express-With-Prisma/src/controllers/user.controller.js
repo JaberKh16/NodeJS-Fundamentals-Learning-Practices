@@ -1,7 +1,7 @@
 import { userValidationSchema } from '../validators/user.validator.js';
 import { prisma } from '../config/db.js';
 import { hashedString } from '../utils/hash-string.js';
-import { ZodError } from 'zod'
+import { ZodError } from 'zod';
 
 
 // Get all users
@@ -50,17 +50,30 @@ export const getUser = async (req, res) => {
 }
 
 
+
+
 // create user
 export const createUser = async (req, res) => {
     try {
-        // validate request body using zod
+        // Validate request body using zod
         const validation = userValidationSchema.safeParse(req.body);
 
         if (!validation.success) {
+            // Use 'issues' instead of 'errors'
+            const formattedErrors = {};
+            validation.error.issues.forEach(err => {
+                const field = err.path.join('.');
+                if (!formattedErrors[field]) {
+                    formattedErrors[field] = [];
+                }
+                formattedErrors[field].push(err.message);
+            });
+
             return res.status(400).json({
                 success: false,
                 error: 'Validation failed',
-                details: validation.error.errors.map(err => ({
+                details: formattedErrors,
+                errors: validation.error.issues.map(err => ({
                     field: err.path.join('.'),
                     message: err.message
                 }))
@@ -69,7 +82,6 @@ export const createUser = async (req, res) => {
 
         const validatedData = validation.data;
         const { name, email, age, password } = validatedData;
-
 
         // Check if user already exists
         const existingUser = await prisma.user.findUnique({
@@ -83,10 +95,9 @@ export const createUser = async (req, res) => {
             });
         }
 
-        // hash password
+        // Hash password
         const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS) || 10;
-        const hashedPassword = hashedString(password, saltRounds);
-
+        const hashedPassword = await hashedString(password, saltRounds);
 
         const newUser = await prisma.user.create({
             data: { 
@@ -96,16 +107,20 @@ export const createUser = async (req, res) => {
                 password: hashedPassword 
             }
         });
+
         // Remove password from response
         const { password: _, ...userWithoutPassword } = newUser;
 
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
+            message: 'User created successfully',
             data: userWithoutPassword
         });
 
     } catch (error) {
-        // handle zod validation errors
+        console.error('Create user error:', error);
+        
+        // Handle Zod validation errors (if not caught by safeParse)
         if (error instanceof ZodError) {
             return res.status(400).json({
                 success: false,
@@ -116,19 +131,55 @@ export const createUser = async (req, res) => {
                 }))
             });
         }
-        console.error('Create user error:', error);
-        res.status(500).json({
+        
+        // Handle Prisma unique constraint errors
+        if (error.code === 'P2002') {
+            return res.status(409).json({
+                success: false,
+                error: 'A user with this email already exists'
+            });
+        }
+
+        return res.status(500).json({
             success: false,
-            error: error.message
+            error: 'Internal server error'
         });
     }
-}
+};
+
 
 // update user
 export const updateUser = async (req, res) => {
     try {
         const id = Number(req.params.id);
-        const { name, email, age, password } = req.body;
+        // Validate request body using zod
+        const validation = userValidationSchema.safeParse(req.body);
+
+        if (!validation.success) {
+            // Use 'issues' instead of 'errors'
+            const formattedErrors = {};
+            validation.error.issues.forEach(err => {
+                const field = err.path.join('.');
+                if (!formattedErrors[field]) {
+                    formattedErrors[field] = [];
+                }
+                formattedErrors[field].push(err.message);
+            });
+
+            return res.status(400).json({
+                success: false,
+                error: 'Validation failed',
+                details: formattedErrors,
+                errors: validation.error.issues.map(err => ({
+                    field: err.path.join('.'),
+                    message: err.message
+                }))
+            });
+        }
+
+        const validatedData = validation.data;
+        const { name, email, age, password } = validatedData;
+
         const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS) || 10;
         const hashedPassword = hashedString(password, saltRounds);
 
@@ -146,7 +197,7 @@ export const updateUser = async (req, res) => {
 
         res.status(200).json({
             success: true,
-            data: updatedUser
+            data: userWithoutPassword
         });
 
     } catch (error) {

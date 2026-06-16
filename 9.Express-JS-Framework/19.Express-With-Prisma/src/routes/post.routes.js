@@ -11,9 +11,9 @@ from '../controllers/post.controller.js';
 const router  = express.Router();
 
 router.get('/index', handleListFetch);
-router.get('/create', handleNewEntry);
+router.post('/create', handleNewEntry);
 router.get('/:id', handleSearchById);
-router.put('/:id', handleUpdateById);
-router.delete('/:id', handleDeleteById);
+router.put('/update/:id', handleUpdateById);
+router.delete('/delete/:id', handleDeleteById);
 
 export default router;

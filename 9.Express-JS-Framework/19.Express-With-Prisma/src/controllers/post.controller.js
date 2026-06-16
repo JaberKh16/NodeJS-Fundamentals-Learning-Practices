@@ -25,7 +25,7 @@ export const handleNewEntry = async(req, res) => {
             data: {
                 title: req.body.title,
                 author: req.body.author,
-                type: req.body.author,
+                type: req.body.type,
                 no_of_comments: req.body.no_of_comments,
                 status: req.body.status
             }
@@ -47,7 +47,18 @@ export const handleNewEntry = async(req, res) => {
 
 export const handleSearchById = async(req, res) => {
     try {
-        const id = Number(req.params.id);
+        const id = req.params.id;
+        
+        // Validate ID
+        if (!id) {
+            return res.status(400).json({
+                status: 400,
+                success: false,
+                msg: 'ID is required',
+                data: null
+            });
+        }
+
         const fetchedPost = await prisma.posts.findUnique({
             where: { id }
         });
@@ -76,13 +87,23 @@ export const handleSearchById = async(req, res) => {
 
 export const handleUpdateById = async(req, res) => {
     try {
-        const id = Number(req.params.id);
+        const id = req.params.id;
+        
+        // Validate ID
+        if (!id) {
+            return res.status(400).json({
+                status: 400,
+                success: false,
+                msg: 'ID is required',
+                data: null
+            });
+        }
         const updatedPost = await prisma.posts.update({
             where: { id },
             data: {
                 title: req.body.title,
                 author: req.body.author,
-                type: req.body.author,
+                type: req.body.type,
                 no_of_comments: req.body.no_of_comments,
                 status: req.body.status
             }
@@ -105,7 +126,17 @@ export const handleUpdateById = async(req, res) => {
 
 export const handleDeleteById = async(req, res) => {
     try {
-        const id = Number(req.params.id);
+        const id = req.params.id;
+        
+        // Validate ID
+        if (!id) {
+            return res.status(400).json({
+                status: 400,
+                success: false,
+                msg: 'ID is required',
+                data: null
+            });
+        }
         await prisma.posts.delete({
             where: { id }
         });

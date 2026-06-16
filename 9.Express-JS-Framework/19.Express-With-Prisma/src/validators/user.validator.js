@@ -27,9 +27,23 @@ export const userValidationSchema = z.object({
 
 });
 
-// User update validation schema (partial)
-export const userUpdateSchema = userValidationSchema.partial();
+export const userRegisterSchema = z.object({
+    name: z.string()
+        .min(2, 'name must be atleast 2 characters')
+        .max(50, 'name must not exceed 50 characters')
+        .trim(),
+    email: z.string()
+        .email('please provide a valid email address')
+        .toLowerCase()
+        .trim(),
+    password: z.string()
+        .min(8, 'Password must be at least 8 characters')
+        .regex(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+            'Password must contain at least one uppercase, one lowercase, and one number'
+        )
 
+})
 
 // Login validation schema
 export const userLoginSchema = z.object({
@@ -37,22 +51,26 @@ export const userLoginSchema = z.object({
     password: z.string().min(1, 'Password is required')
 });
 
-// Custom validation for query parameters
-export const userQuerySchema = z.object({
-    page: z.string()
-        .optional()
-        .default('1')
-        .transform(Number)
-        .pipe(z.number().int().positive()),
-    
-    limit: z.string()
-        .optional()
-        .default('10')
-        .transform(Number)
-        .pipe(z.number().int().min(1).max(100)),
-    
-    search: z.string().trim().optional()
-});
+// // User update validation schema (partial)
+// export const userUpdateSchema = userValidationSchema.partial();
 
-// Type inference (for TypeScript)
-// export type UserRegisterInput = z.infer<typeof userRegisterSchema>;
+
+
+
+// // Custom validation for query parameters
+// export const userQuerySchema = z.object({
+//     page: z.string()
+//         .optional()
+//         .default('1')
+//         .transform(Number)
+//         .pipe(z.number().int().positive()),
+    
+//     limit: z.string()
+//         .optional()
+//         .default('10')
+//         .transform(Number)
+//         .pipe(z.number().int().min(1).max(100)),
+    
+//     search: z.string().trim().optional()
+// });
+
