@@ -1,5 +1,12 @@
 import express from 'express';
-
+import { 
+    handleListFetch, 
+    handleNewEntry, 
+    handleSearchById,
+    handleUpdateById,
+    handleDeleteById 
+}  
+from '../controllers/post.controller.js';
 
 const router  = express.Router();
 

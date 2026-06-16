@@ -1,9 +1,7 @@
-// import { PrismaClient } from '@prisma/client';
-import pkg from '@prisma/client';
-const { PrismaClient } = pkg;
+import { PrismaClient } from '../generated/prisma/index.js';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { log } from "console";
 import { config } from 'dotenv';
-
 
 // Load environment variables
 config();
@@ -11,8 +9,13 @@ config();
 // Get environment
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
+// Create PostgreSQL adapter
+const connectionString = process.env.DATABASE_URL;
+const adapter = new PrismaPg({ connectionString });
 
+// Initialize Prisma Client with adapter
 const prisma = new PrismaClient({
+    adapter,  // ← This is required in Prisma 7!
     log: NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"]
 });
 

@@ -6,7 +6,7 @@ import{
     getUser,
     updateUser,
     deleteUser
-} from '../controllers/user.controller';
+} from '../controllers/user.controller.js';
 
 
 // create router

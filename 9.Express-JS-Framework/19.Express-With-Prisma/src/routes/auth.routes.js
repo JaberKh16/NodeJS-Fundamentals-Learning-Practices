@@ -5,7 +5,7 @@ import {
     handleLogin, 
     handleLogout
 } 
-from '../controllers/auth.controller';
+from '../controllers/auth.controller.js';
 
 // create router
 const router = express.Router();
