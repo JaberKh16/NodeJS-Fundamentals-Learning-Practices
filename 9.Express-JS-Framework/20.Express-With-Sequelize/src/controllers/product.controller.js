@@ -29,10 +29,10 @@ const createProduct = async(req, res)=> {
         if(error instanceof UniqueConstraintError){
             return res.status(409).json({
                 error: 'Validation Error',
-                details: error.errors.map(e => {
-                    field: e.path,
-                    message: e.message
-                });
+                details: error.errors.map(e => ({
+                    field: error.errors[0].path, 
+                    message: error.errors[0].message,
+                }))
             });
         }
 
@@ -119,10 +119,10 @@ const updateProduct = async (req, res) => {
         if(error instanceof UniqueConstraintError){
             return res.status(409).json({
                 error: 'Validation Error',
-                details: error.errors.map(e => {
+                details: error.errors.map(e => ({
                     field: e.path,
                     message: e.message
-                });
+                }))
             });
         }
 

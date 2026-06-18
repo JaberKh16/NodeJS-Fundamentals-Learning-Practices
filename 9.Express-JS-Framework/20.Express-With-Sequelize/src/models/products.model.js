@@ -1,5 +1,5 @@
-const sequelize = require("../config/database");
-const { DataTypes } = require("sequelize");
+const sequelize = require('../../config/database');
+const { DataTypes } = require('sequelize');
 const CategoryModel = require('./category.model')
 
 const ProductModel = sequelize.define(
@@ -21,7 +21,7 @@ const ProductModel = sequelize.define(
       type: DataTypes.TEXT
     },
     price: {
-      type: DataTypes.DECIMAL(10, 2)
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         notEmpty: {
@@ -121,7 +121,7 @@ ProductModel.associate = (models) => {
   ProductModel.belongsTo(models.Category, {
     foreignKey: 'categoryId',
     as: 'category' 
-  }
-});
+  })
+};
 
 module.exports = ProductModel;

@@ -5,7 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "db:create": "npx sequelize-cli db:create",
+    "seed:all": "npx sequelize-cli db:seed:all",
+    "seed:undo:all": "npx sequelize-cli db:seed:undo:all",
+    "seed:undo:last": "npx sequelize-cli db:seed:undo",
+    "db:drop": "npx sequelize-cli db:drop",
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "db:migrate:status": "npx sequelize-cli db:migrate:status"
   },
   "keywords": [],
   "author": "",

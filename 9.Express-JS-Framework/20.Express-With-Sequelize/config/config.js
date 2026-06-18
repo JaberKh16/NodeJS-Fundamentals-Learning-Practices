@@ -8,7 +8,7 @@ module.exports =  {
     databse: process.env.DB_DATABASENAME,
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    host: process.env.DB_DIALECT,
+    dialect: process.env.DB_DIALECT,
     logging: console.log, // set the default
   },
   "test": {
@@ -17,7 +17,7 @@ module.exports =  {
     databse: process.env.DB_DATABASENAME,
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    host: process.env.DB_DIALECT,
+    dialect: process.env.DB_DIALECT,
     logging: console.log, // set the default
   },
   "production": {
@@ -26,7 +26,7 @@ module.exports =  {
     databse: process.env.DB_DATABASENAME,
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
-    host: process.env.DB_DIALECT,
+    dialect: process.env.DB_DIALECT,
     logging: false, // set to false to disable logging in production
   }
 }

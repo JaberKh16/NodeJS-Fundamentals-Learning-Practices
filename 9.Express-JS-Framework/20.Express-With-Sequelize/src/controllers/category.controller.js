@@ -1,5 +1,5 @@
 
-const CategoryModel = require('../models/category.nodel');
+const CategoryModel = require('../models/category.model');
 const { ValidationError, UniqueConstraintError } = require('sequelize');
 
 
@@ -37,7 +37,7 @@ const createCategory = async (req, res) => {
 const listCategories = async(req, res) => {
   try {
     const listCategories = await CategoryModel.findAll(); // if found all list otherwise []
-    return res.status(200).json(data: listCategories);
+    return res.status(200).json({ data: listCategories });
   } catch(error) {
     console.error(JSON.stringify(error));
     console.log(error.constructor.name); // returns if any validation that error class name

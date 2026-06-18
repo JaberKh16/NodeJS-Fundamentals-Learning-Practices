@@ -1,4 +1,4 @@
-const sequelize = require('../config/database');
+const sequelize = require('../../config/database');
 const { DataTypes } = require('sequelize');
 
 const CategoryModel = sequelize.define('Category', {
@@ -9,11 +9,11 @@ const CategoryModel = sequelize.define('Category', {
     allowNull: false
   },
   name: {
-    type: DataTypes.,STRING(60),
+    type: DataTypes.STRING(60),
     allowNull: false,
     unique: {
       msg: 'category name already exists.'
-    }
+    },
     validate: {
       notEmpty: {
         msg: 'Name is required'
