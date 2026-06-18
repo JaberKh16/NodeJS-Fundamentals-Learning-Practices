@@ -1,5 +1,4 @@
 import express from 'express';
-
 import { 
     handleRegister, 
     handleLogin, 
@@ -13,9 +12,7 @@ const router = express.Router();
 
 // define routes
 router.post("/register", handleRegister);
-
 router.post("/login", handleLogin);
-
 router.post("/logout", handleLogout);
 
 
