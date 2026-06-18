@@ -9,7 +9,6 @@ const cors = require('cors');
 dotenv.config({ path: process.cwd() + '/.env' });
 // // dotenv.config({ path: process.cwd() + "/.env", quiet:true }); // to run dotenve sliently with no logs
 
-console.log(process.cwd())
 
 const app = express();
 
