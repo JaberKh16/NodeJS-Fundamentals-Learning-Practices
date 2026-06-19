@@ -103,28 +103,46 @@ const handleSearchById = async(req, res) => {
 
 const handleSearchByName = async(req, res) => {
   try {
-    const fetchedCategory = await CategoryModel.findOne(req.query.name);
-    if(!fetchedCategory) {
-      return res.status(204).json({
-        sucess: false,
+    const name = req.query.name;
+    
+    // Validate input
+    if (!name || typeof name !== 'string' || name.trim().length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid category name provided',
+        data: []
+      });
+    }
+
+    const fetchedCategory = await CategoryModel.findOne({ 
+      name: name.trim()
+    });
+    
+    if (!fetchedCategory) {
+      return res.status(404).json({ 
+        success: false,
         message: 'Category name not found',
         data: []
       });
     }
+    
     return res.status(200).json({
-      sucess: true,
+      success: true, 
       message: 'Category name fetched',
       data: fetchedCategory
     });
+    
   } catch (error) {
-    // handle the validation error
-    if(error instanceof ValidationError) {
+    if (error instanceof ValidationError) {
       return res.status(422).json({ 
         error: 'Validation Error', 
         details: error.errors.map(e => ({ field: e.path, message: e.message }))
       });
     }
-    return res.status(500).json({ message: 'Something went wrong.'});
+    return res.status(500).json({ 
+      success: false,
+      message: 'Something went wrong.' 
+    });
   }
 }
 

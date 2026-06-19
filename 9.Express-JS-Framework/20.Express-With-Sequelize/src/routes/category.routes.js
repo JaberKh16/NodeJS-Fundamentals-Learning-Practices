@@ -12,7 +12,7 @@ const {
 router.get("/index", handleListCategories);
 router.post("/create", handleNewEntry);
 router.get("/:id", handleSearchById);
-router.get("/:name", handleSearchByName);
+router.get("/search", handleSearchByName);
 router.put("/update/:id", handleUpdateCategory);
 router.delete("/delete/:id", handleDeleteCategory);
 
